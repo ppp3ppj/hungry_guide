@@ -1,5 +1,9 @@
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
+/* See the Tailwind configuration guide for advanced usage
+   https://tailwindcss.com/docs/configuration */
 
-/* This file is for your main application CSS */
+@import "tailwindcss";
+@plugin "@tailwindcss/forms";
+
+@variant phx-click-loading ([".phx-click-loading&", ".phx-click-loading &"]);
+@variant phx-submit-loading ([".phx-submit-loading&", ".phx-submit-loading &"]);
+@variant phx-change-loading ([".phx-change-loading&", ".phx-change-loading &"]);
