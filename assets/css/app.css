@@ -3,6 +3,9 @@
 
 @import "tailwindcss";
 @plugin "@tailwindcss/forms";
+@plugin "daisyui" {
+  themes: all;
+}
 
 @variant phx-click-loading ([".phx-click-loading&", ".phx-click-loading &"]);
 @variant phx-submit-loading ([".phx-submit-loading&", ".phx-submit-loading &"]);
