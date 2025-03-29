@@ -8,7 +8,8 @@ config :hungry_guide, HungryGuide.Repo,
   database: "hungry_guide_dev",
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
-  pool_size: 10
+  pool_size: 10,
+  port: 10432
 
 # For development, we disable any cache and enable
 # debugging and code reloading.

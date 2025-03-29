@@ -9,7 +9,7 @@ services:
       - "10432:5432"
     environment:
       TZ: "Asia/Bangkok"
-      POSTGRES_DB: hungry_dev
+      POSTGRES_DB: hungry_guide_dev
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       PGPORT: 5432
