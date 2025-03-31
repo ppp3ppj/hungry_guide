@@ -8,6 +8,7 @@ defmodule HungryGuideWeb.Router do
     plug :put_root_layout, html: {HungryGuideWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug HungryGuideWeb.Plugs.ThemeSelectorPlug # Add the theme plug here
   end
 
   pipeline :api do
@@ -18,6 +19,7 @@ defmodule HungryGuideWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+    post "/cookie/update", CookieController, :update
   end
 
   # Other scopes may use custom stacks.

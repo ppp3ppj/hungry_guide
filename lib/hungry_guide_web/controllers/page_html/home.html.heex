@@ -55,6 +55,43 @@
     <p class="text-[2rem] mt-4 font-semibold leading-10 tracking-tighter text-zinc-900 text-balance">
       Peace of mind from prototype to production.
     </p>
+    <div
+      id="backpex-theme-selector"
+      phx-hook="ThemeSwitcher"
+    >
+      <%!-- Desktop Icon --%>
+      <div tabindex="0" role="button" class="btn btn-ghost hidden md:flex">
+        HI
+      </div>
+      <%!-- Mobile Icon --%>
+      <div tabindex="0" role="button" class="btn btn-square btn-ghost md:hidden">
+        Mobile Icon
+      </div>
+      <form
+        id="backpex-theme-selector-form"
+        class="dropdown-content bg-base-300 rounded-box max-h-96 overflow-y-scroll"
+ data-cookie-path={HungryGuideWeb.RouterHelpers.cookie_path(@socket)}>
+      >
+        <ul tabindex="0" class="rounded-box z-1 menu w-48 outline-hidden">
+        <li class="w-full">
+        <label class="has-checked:bg-neutral has-checked:text-neutral-content">
+          <input type="radio" name="theme-selector" class="theme-controller hidden" phx-click="[[&quot;dispatch&quot;,{&quot;event&quot;:&quot;backpex:theme-change&quot;}]]" value="lemonade">
+          Lemonade
+        </label>
+      </li>
+
+        <li class="w-full">
+        <label class="has-checked:bg-neutral has-checked:text-neutral-content">
+          <input type="radio" name="theme-selector" class="theme-controller hidden" phx-click="[[&quot;dispatch&quot;,{&quot;event&quot;:&quot;backpex:theme-change&quot;}]]" value="cyberpunk">
+         Cyberpunk
+        </label>
+      </li>
+        </ul>
+      </form>
+    </div>
+    <p>{@theme}</p>
+
+
     <p class="mt-4 text-base leading-7 text-zinc-600">
       Build rich, interactive web applications quickly, with less code and fewer moving parts. Join our growing community of developers using Phoenix to craft APIs, HTML5 apps and more, for fun or at scale.
     </p>
