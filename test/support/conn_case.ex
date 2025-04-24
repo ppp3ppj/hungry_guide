@@ -28,6 +28,7 @@ defmodule HungryGuideWeb.ConnCase do
       import Plug.Conn
       import Phoenix.ConnTest
       import HungryGuideWeb.ConnCase
+      import HungryGuide.Factory
     end
   end
 
