@@ -68,6 +68,14 @@ defmodule HungryGuideWeb.Router do
       on_mount: [{HungryGuideWeb.UserAuth, :ensure_authenticated}] do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
+
+      # Unit
+      live "/units", UnitLive.Index, :index
+      live "/units/new", UnitLive.Index, :new
+      live "/units/:id/edit", UnitLive.Index, :edit
+
+      live "/units/:id", UnitLive.Show, :show
+      live "/units/:id/show/edit", UnitLive.Show, :edit
     end
   end
 
