@@ -1,5 +1,5 @@
 defmodule HungryGuideWeb.UnitLiveTest do
-  use HungryGuideWeb.ConnCase
+  use HungryGuideWeb.ConnCase, async: true
 
   import Phoenix.LiveViewTest
   import HungryGuide.InventoriesFixtures
@@ -13,17 +13,23 @@ defmodule HungryGuideWeb.UnitLiveTest do
     %{unit: unit}
   end
 
+  setup do
+    %{user: insert(:user)}
+  end
+
   describe "Index" do
     setup [:create_unit]
 
-    test "lists all units", %{conn: conn, unit: unit} do
+    test "lists all units", %{conn: conn, unit: unit, user: user} do
+      conn = log_in_user(conn, user)
       {:ok, _index_live, html} = live(conn, ~p"/units")
 
       assert html =~ "Listing Units"
       assert html =~ unit.name
     end
 
-    test "saves new unit", %{conn: conn} do
+    test "saves new unit", %{conn: conn, user: user} do
+      conn = log_in_user(conn, user)
       {:ok, index_live, _html} = live(conn, ~p"/units")
 
       assert index_live |> element("a", "New Unit") |> render_click() =~
@@ -46,7 +52,8 @@ defmodule HungryGuideWeb.UnitLiveTest do
       assert html =~ "some name"
     end
 
-    test "updates unit in listing", %{conn: conn, unit: unit} do
+    test "updates unit in listing", %{conn: conn, unit: unit, user: user} do
+      conn = log_in_user(conn, user)
       {:ok, index_live, _html} = live(conn, ~p"/units")
 
       assert index_live |> element("#units-#{unit.id} a", "Edit") |> render_click() =~
@@ -69,7 +76,8 @@ defmodule HungryGuideWeb.UnitLiveTest do
       assert html =~ "some updated name"
     end
 
-    test "deletes unit in listing", %{conn: conn, unit: unit} do
+    test "deletes unit in listing", %{conn: conn, unit: unit, user: user} do
+      conn = log_in_user(conn, user)
       {:ok, index_live, _html} = live(conn, ~p"/units")
 
       assert index_live |> element("#units-#{unit.id} a", "Delete") |> render_click()
@@ -80,14 +88,16 @@ defmodule HungryGuideWeb.UnitLiveTest do
   describe "Show" do
     setup [:create_unit]
 
-    test "displays unit", %{conn: conn, unit: unit} do
+    test "displays unit", %{conn: conn, unit: unit, user: user} do
+      conn = log_in_user(conn, user)
       {:ok, _show_live, html} = live(conn, ~p"/units/#{unit}")
 
       assert html =~ "Show Unit"
       assert html =~ unit.name
     end
 
-    test "updates unit within modal", %{conn: conn, unit: unit} do
+    test "updates unit within modal", %{conn: conn, unit: unit, user: user} do
+      conn = log_in_user(conn, user)
       {:ok, show_live, _html} = live(conn, ~p"/units/#{unit}")
 
       assert show_live |> element("a", "Edit") |> render_click() =~
