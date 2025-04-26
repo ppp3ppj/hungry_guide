@@ -65,12 +65,12 @@ defmodule HungryGuide.InventoriesTest do
     @invalid_attrs %{name: nil, quantity: nil}
 
     test "list_ingredients/0 returns all ingredients" do
-      ingredient = ingredient_fixture()
+      ingredient = params_with_assocs(:ingredient)
       assert Inventories.list_ingredients() == [ingredient]
     end
 
     test "get_ingredient!/1 returns the ingredient with given id" do
-      ingredient = ingredient_fixture()
+      ingredient = params_with_assocs(:ingredient)
       assert Inventories.get_ingredient!(ingredient.id) == ingredient
     end
 
@@ -87,28 +87,35 @@ defmodule HungryGuide.InventoriesTest do
     end
 
     test "update_ingredient/2 with valid data updates the ingredient" do
-      ingredient = ingredient_fixture()
+      ingredient = params_with_assocs(:ingredient)
       update_attrs = %{name: "some updated name", quantity: "456.7"}
 
-      assert {:ok, %Ingredient{} = ingredient} = Inventories.update_ingredient(ingredient, update_attrs)
+      assert {:ok, %Ingredient{} = ingredient} =
+               Inventories.update_ingredient(ingredient, update_attrs)
+
       assert ingredient.name == "some updated name"
       assert ingredient.quantity == Decimal.new("456.7")
     end
 
     test "update_ingredient/2 with invalid data returns error changeset" do
-      ingredient = ingredient_fixture()
-      assert {:error, %Ecto.Changeset{}} = Inventories.update_ingredient(ingredient, @invalid_attrs)
+      # ingredient = ingredient_fixture()
+
+      ingredient = params_with_assocs(:ingredient)
+
+      assert {:error, %Ecto.Changeset{}} =
+               Inventories.update_ingredient(ingredient, %{unit_id: nil})
+
       assert ingredient == Inventories.get_ingredient!(ingredient.id)
     end
 
     test "delete_ingredient/1 deletes the ingredient" do
-      ingredient = ingredient_fixture()
+      ingredient = params_with_assocs(:ingredient)
       assert {:ok, %Ingredient{}} = Inventories.delete_ingredient(ingredient)
       assert_raise Ecto.NoResultsError, fn -> Inventories.get_ingredient!(ingredient.id) end
     end
 
     test "change_ingredient/1 returns a ingredient changeset" do
-      ingredient = ingredient_fixture()
+      ingredient = params_with_assocs(:ingredient)
       assert %Ecto.Changeset{} = Inventories.change_ingredient(ingredient)
     end
   end

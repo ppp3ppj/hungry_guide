@@ -7,6 +7,7 @@
   </:actions>
 </.header>
 
+
 <.table
   id="ingredients"
   rows={@streams.ingredients}
@@ -37,6 +38,7 @@
     title={@page_title}
     action={@live_action}
     ingredient={@ingredient}
+    units={@units}
     patch={~p"/ingredients"}
   />
 </.modal>

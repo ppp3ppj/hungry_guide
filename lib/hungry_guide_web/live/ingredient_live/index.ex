@@ -6,7 +6,16 @@ defmodule HungryGuideWeb.IngredientLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :ingredients, Inventories.list_ingredients())}
+    units = Inventories.list_units()
+      |> Enum.map(&{&1.name, &1.id})
+
+    socket =
+      socket
+      |> assign(:units, units)
+      |> stream(:ingredients, Inventories.list_ingredients())
+
+    {:ok, socket}
+    #{:ok, stream(socket, :ingredients, Inventories.list_ingredients())}
   end
 
   @impl true
