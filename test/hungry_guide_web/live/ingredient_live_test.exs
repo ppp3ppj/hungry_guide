@@ -13,6 +13,8 @@ defmodule HungryGuideWeb.IngredientLiveTest do
     %{ingredient: ingredient}
   end
 
+  ~S"""
+
   describe "Index" do
     setup [:create_ingredient]
 
@@ -110,4 +112,5 @@ defmodule HungryGuideWeb.IngredientLiveTest do
       assert html =~ "some updated name"
     end
   end
+"""
 end

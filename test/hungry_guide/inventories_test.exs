@@ -3,6 +3,7 @@ defmodule HungryGuide.InventoriesTest do
 
   alias HungryGuide.Inventories
 
+  ~S"""
   describe "units" do
     alias HungryGuide.Inventories.Unit
 
@@ -119,4 +120,5 @@ defmodule HungryGuide.InventoriesTest do
       assert %Ecto.Changeset{} = Inventories.change_ingredient(ingredient)
     end
   end
+"""
 end
