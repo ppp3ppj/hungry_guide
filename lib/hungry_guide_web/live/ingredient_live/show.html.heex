@@ -11,6 +11,7 @@
 <.list>
   <:item title="Name">{@ingredient.name}</:item>
   <:item title="Quantity">{@ingredient.quantity}</:item>
+  <:item title="Unit">{@ingredient.unit.name}</:item>
 </.list>
 
 <.back navigate={~p"/ingredients"}>Back to ingredients</.back>
@@ -22,6 +23,7 @@
     title={@page_title}
     action={@live_action}
     ingredient={@ingredient}
+    units={@units}
     patch={~p"/ingredients/#{@ingredient}"}
   />
 </.modal>

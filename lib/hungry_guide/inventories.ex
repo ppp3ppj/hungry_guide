@@ -131,7 +131,11 @@ defmodule HungryGuide.Inventories do
       ** (Ecto.NoResultsError)
 
   """
-  def get_ingredient!(id), do: Repo.get!(Ingredient, id)
+  #def get_ingredient!(id), do: Repo.get!(Ingredient, id)
+  def get_ingredient!(id) do
+    Repo.get!(Ingredient, id)
+    |> Repo.preload(:unit)
+  end
 
   @doc """
   Creates a ingredient.
