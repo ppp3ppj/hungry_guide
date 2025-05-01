@@ -77,13 +77,20 @@ defmodule HungryGuideWeb.Router do
       live "/units/:id", UnitLive.Show, :show
       live "/units/:id/show/edit", UnitLive.Show, :edit
 
-      #Ingredient
+      # Ingredient
       live "/ingredients", IngredientLive.Index, :index
       live "/ingredients/new", IngredientLive.Index, :new
       live "/ingredients/:id/edit", IngredientLive.Index, :edit
 
       live "/ingredients/:id", IngredientLive.Show, :show
       live "/ingredients/:id/show/edit", IngredientLive.Show, :edit
+
+      live "/receipts", ReceiptLive.Index, :index
+      live "/receipts/new", ReceiptLive.Index, :new
+      live "/receipts/:id/edit", ReceiptLive.Index, :edit
+
+      live "/receipts/:id", ReceiptLive.Show, :show
+      live "/receipts/:id/show/edit", ReceiptLive.Show, :edit
     end
   end
 
