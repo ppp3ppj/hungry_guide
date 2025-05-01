@@ -1,4 +1,5 @@
 defmodule HungryGuide.Recipes.Receipt do
+  alias HungryGuide.Recipes
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -7,6 +8,9 @@ defmodule HungryGuide.Recipes.Receipt do
   schema "receipts" do
     field :name, :string
     field :description, :string
+
+    has_many :receipt_ingredients, Recipes.ReceiptIngredient
+    has_many :ingredients, through: [:receipt_ingredients, :ingredient]
 
     timestamps(type: :utc_datetime)
   end
