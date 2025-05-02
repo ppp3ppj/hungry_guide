@@ -1,6 +1,7 @@
 defmodule HungryGuideWeb.ReceiptLive.Index do
   use HungryGuideWeb, :live_view
 
+  alias HungryGuide.Inventories
   alias HungryGuide.Recipes
   alias HungryGuide.Recipes.Receipt
 
@@ -21,9 +22,14 @@ defmodule HungryGuideWeb.ReceiptLive.Index do
   end
 
   defp apply_action(socket, :new, _params) do
+    ingredients = Inventories.list_ingredients()
+
     socket
     |> assign(:page_title, "New Receipt")
     |> assign(:receipt, %Receipt{})
+    |> assign(:ingredients, ingredients)
+    |> assign(:selected_ingredients, MapSet.new())
+    |> assign(:quantities, %{})
   end
 
   defp apply_action(socket, :index, _params) do
@@ -43,5 +49,29 @@ defmodule HungryGuideWeb.ReceiptLive.Index do
     {:ok, _} = Recipes.delete_receipt(receipt)
 
     {:noreply, stream_delete(socket, :receipts, receipt)}
+  end
+
+  @impl true
+  def handle_event("toggle_ingredient", %{"id" => id}, socket) do
+    IO.puts("NewwwwJeannns")
+    selected = socket.assigns.selected_ingredients
+
+    selected =
+      if MapSet.member?(selected, id) do
+        MapSet.delete(selected, id)
+      else
+        MapSet.put(selected, id)
+      end
+
+    {:noreply, assign(socket, :selected_ingredients, selected)}
+  end
+
+
+  @impl true
+  def handle_event("update_quantity", %{"id" => id, "quantity" => quantity}, socket) do
+    {:noreply,
+     update(socket, :quantities, fn q ->
+       Map.put(q, id, quantity)
+     end)}
   end
 end

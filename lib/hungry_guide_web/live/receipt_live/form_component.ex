@@ -25,6 +25,31 @@ defmodule HungryGuideWeb.ReceiptLive.FormComponent do
           <.button phx-disable-with="Saving...">Save Receipt</.button>
         </:actions>
       </.simple_form>
+
+      <%= for ingr <- @ingredients do %>
+        <label>
+          <input
+            type="checkbox"
+            phx-value-id={ingr.id}
+            phx-click="toggle_ingredient"
+            checked={ingr.id in @selected_ingredients}
+            class="checkbox"
+          />
+          {ingr.name}
+        </label>
+      <%= if ingr.id in @selected_ingredients do %>
+        <input
+          type="number"
+          name="quantity"
+          phx-debounce="500"
+          phx-change="update_quantity"
+          phx-value-id={ingr.id}
+          value={Map.get(@quantities, ingr.id, "")}
+          class="border rounded ml-2 w-20"
+          placeholder="Amount"
+        />
+      <% end %>
+      <% end %>
     </div>
     """
   end
@@ -80,4 +105,5 @@ defmodule HungryGuideWeb.ReceiptLive.FormComponent do
   end
 
   defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
+
 end
