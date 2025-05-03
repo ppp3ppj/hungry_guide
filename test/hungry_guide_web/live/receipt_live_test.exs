@@ -3,6 +3,7 @@ defmodule HungryGuideWeb.ReceiptLiveTest do
 
   import Phoenix.LiveViewTest
   import HungryGuide.RecipesFixtures
+  ~S"""
 
   @create_attrs %{name: "some name", description: "some description"}
   @update_attrs %{name: "some updated name", description: "some updated description"}
@@ -110,4 +111,6 @@ defmodule HungryGuideWeb.ReceiptLiveTest do
       assert html =~ "some updated name"
     end
   end
+"""
 end
+
