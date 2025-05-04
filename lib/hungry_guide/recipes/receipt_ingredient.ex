@@ -20,7 +20,7 @@ defmodule HungryGuide.Recipes.ReceiptIngredient do
   @doc false
   def changeset(receipt_ingredient, attrs) do
     receipt_ingredient
-    |> cast(attrs, [:quantity])
-    |> validate_required([:quantity])
+    |> cast(attrs, [:quantity, :ingredient_id])
+    |> validate_required([:quantity, :ingredient_id])
   end
 end

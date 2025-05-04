@@ -28,12 +28,7 @@ defmodule HungryGuideWeb.ReceiptLive.FormComponent do
 
       <div class="grid grid-cols-3 gap-4">
         <%= for ingr <- @ingredients do %>
-          <button
-            class="btn"
-            id={"btn-#{ingr.id}"}
-            phx-value-id={ingr.id}
-            phx-hook="ClickOrHold"
-          >
+          <button class="btn" id={"btn-#{ingr.id}"} phx-value-id={ingr.id} phx-hook="ClickOrHold">
             {ingr.name}
             <div class="badge badge-sm badge-secondary">{@quantities[ingr.id]}</div>
           </button>
@@ -79,7 +74,25 @@ defmodule HungryGuideWeb.ReceiptLive.FormComponent do
   end
 
   defp save_receipt(socket, :new, receipt_params) do
-    case Recipes.create_receipt(receipt_params) do
+    ~S"""
+        case Recipes.create_receipt(receipt_params) do
+          {:ok, receipt} ->
+            notify_parent({:saved, receipt})
+
+            {:noreply,
+             socket
+             |> put_flash(:info, "Receipt created successfully")
+             |> push_patch(to: socket.assigns.patch)}
+
+          {:error, %Ecto.Changeset{} = changeset} ->
+            {:noreply, assign(socket, form: to_form(changeset))}
+        end
+    """
+
+      ingredient_quantities = socket.assigns.quantities
+      params = Map.merge(receipt_params, ingredient_quantities)
+      IO.inspect(params, label: "Debug")
+    case Recipes.create_receipt_with_ingredients(params) do
       {:ok, receipt} ->
         notify_parent({:saved, receipt})
 

@@ -20,5 +20,6 @@ defmodule HungryGuide.Recipes.Receipt do
     receipt
     |> cast(attrs, [:name, :description])
     |> validate_required([:name, :description])
+    |> cast_assoc(:receipt_ingredients)
   end
 end

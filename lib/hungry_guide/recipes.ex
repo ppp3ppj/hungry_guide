@@ -4,6 +4,7 @@ defmodule HungryGuide.Recipes do
   """
 
   import Ecto.Query, warn: false
+  alias HungryGuide.Recipes.ReceiptIngredient
   alias HungryGuide.Repo
 
   alias HungryGuide.Recipes.Receipt
@@ -100,5 +101,32 @@ defmodule HungryGuide.Recipes do
   """
   def change_receipt(%Receipt{} = receipt, attrs \\ %{}) do
     Receipt.changeset(receipt, attrs)
+  end
+
+  def create_receipt_with_ingredients(attrs) do
+    # Extract name and description attributes
+    receipt_attrs = Map.take(attrs, ["name", "description"])
+
+    # Convert ingredient data into ReceiptIngredient structs
+    receipt_ingredients = build_receipt_ingredients(attrs)
+
+    %Receipt{}
+    |> Receipt.changeset(receipt_attrs)
+    |> Ecto.Changeset.put_assoc(:receipt_ingredients, receipt_ingredients)
+    |> Repo.insert()
+  end
+
+  defp build_receipt_ingredients(attrs) do
+    # Extract ingredient data (all keys in attrs that are not "name" or "description")
+    ingredients_map = Map.drop(attrs, ["name", "description"])
+
+    # Convert each ingredient ID and quantity into a ReceiptIngredient struct
+    Enum.map(ingredients_map, fn {ingredient_id, quantity} ->
+      %ReceiptIngredient{
+        ingredient_id: ingredient_id,
+        # assuming quantity is a string, convert to Decimal
+        quantity: Decimal.new(quantity)
+      }
+    end)
   end
 end
