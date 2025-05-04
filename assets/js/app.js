@@ -22,8 +22,45 @@ import {Socket} from "phoenix"
 import {LiveSocket} from "phoenix_live_view"
 import topbar from "../vendor/topbar"
 
+// -- JS Hooks
+let Hooks = {}
+let ClickOrHold = {
+  mounted() {
+    let timer = null
+    let pressed = false
+
+    this.el.addEventListener("mousedown", (e) => {
+      pressed = true
+
+      timer = setTimeout(() => {
+        pressed = false
+        this.pushEvent("reset_ingredient", { id: this.el.getAttribute("phx-value-id") })
+      }, 700)
+    })
+
+    this.el.addEventListener("mouseup", (e) => {
+      if (timer) clearTimeout(timer)
+
+      if (pressed) {
+        // Short click — allow increment
+        this.pushEvent("increment", { id: this.el.getAttribute("phx-value-id") })
+      }
+
+      pressed = false
+    })
+
+    this.el.addEventListener("mouseleave", () => {
+      if (timer) clearTimeout(timer)
+      pressed = false
+    })
+  }
+}
+
+Hooks.ClickOrHold = ClickOrHold
+
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 let liveSocket = new LiveSocket("/live", Socket, {
+  hooks: Hooks,
   longPollFallbackMs: 2500,
   params: {_csrf_token: csrfToken}
 })

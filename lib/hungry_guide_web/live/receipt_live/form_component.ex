@@ -26,30 +26,19 @@ defmodule HungryGuideWeb.ReceiptLive.FormComponent do
         </:actions>
       </.simple_form>
 
-      <%= for ingr <- @ingredients do %>
-        <label>
-          <input
-            type="checkbox"
+      <div class="grid grid-cols-3 gap-4">
+        <%= for ingr <- @ingredients do %>
+          <button
+            class="btn"
+            id={"btn-#{ingr.id}"}
             phx-value-id={ingr.id}
-            phx-click="toggle_ingredient"
-            checked={ingr.id in @selected_ingredients}
-            class="checkbox"
-          />
-          {ingr.name}
-        </label>
-      <%= if ingr.id in @selected_ingredients do %>
-        <input
-          type="number"
-          name="quantity"
-          phx-debounce="500"
-          phx-change="update_quantity"
-          phx-value-id={ingr.id}
-          value={Map.get(@quantities, ingr.id, "")}
-          class="border rounded ml-2 w-20"
-          placeholder="Amount"
-        />
-      <% end %>
-      <% end %>
+            phx-hook="ClickOrHold"
+          >
+            {ingr.name}
+            <div class="badge badge-sm badge-secondary">{@quantities[ingr.id]}</div>
+          </button>
+        <% end %>
+      </div>
     </div>
     """
   end
@@ -105,5 +94,4 @@ defmodule HungryGuideWeb.ReceiptLive.FormComponent do
   end
 
   defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
-
 end

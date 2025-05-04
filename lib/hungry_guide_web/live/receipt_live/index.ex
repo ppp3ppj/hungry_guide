@@ -7,7 +7,12 @@ defmodule HungryGuideWeb.ReceiptLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :receipts, Recipes.list_receipts())}
+    socket =
+      socket
+      |> stream(:receipts, Recipes.list_receipts())
+
+    # {:ok, stream(socket, :receipts, Recipes.list_receipts())}
+    {:ok, socket}
   end
 
   @impl true
@@ -23,13 +28,13 @@ defmodule HungryGuideWeb.ReceiptLive.Index do
 
   defp apply_action(socket, :new, _params) do
     ingredients = Inventories.list_ingredients()
+    intial_quantities = Map.new(ingredients, fn ingr -> {ingr.id, 0} end)
 
     socket
     |> assign(:page_title, "New Receipt")
     |> assign(:receipt, %Receipt{})
     |> assign(:ingredients, ingredients)
-    |> assign(:selected_ingredients, MapSet.new())
-    |> assign(:quantities, %{})
+    |> assign(:quantities, intial_quantities)
   end
 
   defp apply_action(socket, :index, _params) do
@@ -52,20 +57,17 @@ defmodule HungryGuideWeb.ReceiptLive.Index do
   end
 
   @impl true
-  def handle_event("toggle_ingredient", %{"id" => id}, socket) do
-    IO.puts("NewwwwJeannns")
-    selected = socket.assigns.selected_ingredients
+  def handle_event("increment", %{"id" => ingr_id}, socket) do
+    updated_quantities = Map.update!(socket.assigns.quantities, ingr_id, fn val -> val + 1 end)
 
-    selected =
-      if MapSet.member?(selected, id) do
-        MapSet.delete(selected, id)
-      else
-        MapSet.put(selected, id)
-      end
-
-    {:noreply, assign(socket, :selected_ingredients, selected)}
+    {:noreply, assign(socket, quantities: updated_quantities)}
   end
 
+  @impl true
+  def handle_event("reset_ingredient", %{"id" => id}, socket) do
+    new_quantities = Map.put(socket.assigns.quantities, id, 0)
+    {:noreply, assign(socket, quantities: new_quantities)}
+  end
 
   @impl true
   def handle_event("update_quantity", %{"id" => id, "quantity" => quantity}, socket) do
