@@ -21,9 +21,26 @@ defmodule HungryGuideWeb.ReceiptLive.Index do
   end
 
   defp apply_action(socket, :edit, %{"id" => id}) do
+    # Fetch receipt_ingredients and the receipt
+    receipt_ingredients = HungryGuide.Recipes.get_receipt_ingredients(id)
+    ingredients = Inventories.list_ingredients()
+    receipt = Recipes.get_receipt!(id)
+
+    # Create a map of ingredient IDs to quantities (for easy lookup)
+    quantities =
+      Enum.reduce(receipt_ingredients, %{}, fn ri, acc ->
+        Map.put(acc, ri.ingredient_id, ri.quantity)
+      end)
+
+    IO.inspect(receipt_ingredients, label: "Edit: ")
+
+    # Assign receipt_ingredients and quantities to the socket
     socket
     |> assign(:page_title, "Edit Receipt")
-    |> assign(:receipt, Recipes.get_receipt!(id))
+    |> assign(:ingredients, ingredients)
+    |> assign(:receipt, receipt)
+    |> assign(:receipt_ingredients, receipt_ingredients)
+    |> assign(:quantities, quantities)
   end
 
   defp apply_action(socket, :new, _params) do
@@ -58,22 +75,25 @@ defmodule HungryGuideWeb.ReceiptLive.Index do
 
   @impl true
   def handle_event("increment", %{"id" => ingr_id}, socket) do
-    updated_quantities = Map.update!(socket.assigns.quantities, ingr_id, fn val -> val + 1 end)
+    updated_quantities =
+      Map.update!(socket.assigns.quantities, ingr_id, fn val ->
+        Decimal.add(val, 1)
+      end)
 
     {:noreply, assign(socket, quantities: updated_quantities)}
   end
 
   @impl true
   def handle_event("reset_ingredient", %{"id" => id}, socket) do
-    new_quantities = Map.put(socket.assigns.quantities, id, 0)
-    {:noreply, assign(socket, quantities: new_quantities)}
+  new_quantities = Map.put(socket.assigns.quantities, id, Decimal.new(0))
+  {:noreply, assign(socket, quantities: new_quantities)}
   end
 
   @impl true
-  def handle_event("update_quantity", %{"id" => id, "quantity" => quantity}, socket) do
-    {:noreply,
-     update(socket, :quantities, fn q ->
-       Map.put(q, id, quantity)
-     end)}
-  end
+def handle_event("update_quantity", %{"id" => id, "quantity" => quantity}, socket) do
+  {:noreply,
+   update(socket, :quantities, fn q ->
+     Map.put(q, id, Decimal.new(quantity))
+   end)}
+end
 end
