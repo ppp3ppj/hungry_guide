@@ -32,8 +32,6 @@ defmodule HungryGuideWeb.ReceiptLive.Index do
         Map.put(acc, ri.ingredient_id, ri.quantity)
       end)
 
-    IO.inspect(receipt_ingredients, label: "Edit: ")
-
     # Assign receipt_ingredients and quantities to the socket
     socket
     |> assign(:page_title, "Edit Receipt")
@@ -85,15 +83,15 @@ defmodule HungryGuideWeb.ReceiptLive.Index do
 
   @impl true
   def handle_event("reset_ingredient", %{"id" => id}, socket) do
-  new_quantities = Map.put(socket.assigns.quantities, id, Decimal.new(0))
-  {:noreply, assign(socket, quantities: new_quantities)}
+    new_quantities = Map.put(socket.assigns.quantities, id, Decimal.new(0))
+    {:noreply, assign(socket, quantities: new_quantities)}
   end
 
   @impl true
-def handle_event("update_quantity", %{"id" => id, "quantity" => quantity}, socket) do
-  {:noreply,
-   update(socket, :quantities, fn q ->
-     Map.put(q, id, Decimal.new(quantity))
-   end)}
-end
+  def handle_event("update_quantity", %{"id" => id, "quantity" => quantity}, socket) do
+    {:noreply,
+     update(socket, :quantities, fn q ->
+       Map.put(q, id, Decimal.new(quantity))
+     end)}
+  end
 end

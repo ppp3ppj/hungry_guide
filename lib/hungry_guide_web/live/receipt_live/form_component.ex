@@ -59,7 +59,11 @@ defmodule HungryGuideWeb.ReceiptLive.FormComponent do
   end
 
   defp save_receipt(socket, :edit, receipt_params) do
-    case Recipes.update_receipt(socket.assigns.receipt, receipt_params) do
+    ingredient_quantities = socket.assigns.quantities
+    receipt = socket.assigns.receipt
+    params = Map.merge(receipt_params, %{"receipt_ingredients" => ingredient_quantities})
+
+    case Recipes.update_receipt_with_ingredients(params, receipt) do
       {:ok, receipt} ->
         notify_parent({:saved, receipt})
 
@@ -74,24 +78,9 @@ defmodule HungryGuideWeb.ReceiptLive.FormComponent do
   end
 
   defp save_receipt(socket, :new, receipt_params) do
-    ~S"""
-        case Recipes.create_receipt(receipt_params) do
-          {:ok, receipt} ->
-            notify_parent({:saved, receipt})
+    ingredient_quantities = socket.assigns.quantities
+    params = Map.merge(receipt_params, ingredient_quantities)
 
-            {:noreply,
-             socket
-             |> put_flash(:info, "Receipt created successfully")
-             |> push_patch(to: socket.assigns.patch)}
-
-          {:error, %Ecto.Changeset{} = changeset} ->
-            {:noreply, assign(socket, form: to_form(changeset))}
-        end
-    """
-
-      ingredient_quantities = socket.assigns.quantities
-      params = Map.merge(receipt_params, ingredient_quantities)
-      IO.inspect(params, label: "Debug")
     case Recipes.create_receipt_with_ingredients(params) do
       {:ok, receipt} ->
         notify_parent({:saved, receipt})

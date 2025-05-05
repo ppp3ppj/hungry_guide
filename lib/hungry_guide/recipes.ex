@@ -106,9 +106,9 @@ defmodule HungryGuide.Recipes do
   def create_receipt_with_ingredients(attrs) do
     # Extract name and description attributes
     receipt_attrs = Map.take(attrs, ["name", "description"])
-
+    ingredients_map = Map.drop(attrs, ["name", "description"])
     # Convert ingredient data into ReceiptIngredient structs
-    receipt_ingredients = build_receipt_ingredients(attrs)
+    receipt_ingredients = build_receipt_ingredients(ingredients_map)
 
     %Receipt{}
     |> Receipt.changeset(receipt_attrs)
@@ -116,17 +116,40 @@ defmodule HungryGuide.Recipes do
     |> Repo.insert()
   end
 
-  defp build_receipt_ingredients(attrs) do
-    # Extract ingredient data (all keys in attrs that are not "name" or "description")
-    ingredients_map = Map.drop(attrs, ["name", "description"])
-
+  defp build_receipt_ingredients(ingredients_map) do
+    IO.inspect(ingredients_map, label: "data is:")
     # Convert each ingredient ID and quantity into a ReceiptIngredient struct
     Enum.map(ingredients_map, fn {ingredient_id, quantity} ->
       %ReceiptIngredient{
         ingredient_id: ingredient_id,
         # assuming quantity is a string, convert to Decimal
+        #quantity: to_decimal(quantity)
         quantity: Decimal.new(quantity)
       }
     end)
+  end
+
+  def get_receipt_ingredients(receipt_id) do
+    Repo.all(
+      from ri in ReceiptIngredient,
+        where: ri.receipt_id == ^receipt_id,
+        # Optionally preload the ingredient data
+        preload: [:ingredient]
+    )
+  end
+
+  def update_receipt_with_ingredients(attrs, receipt) do
+    receipt = Repo.get!(Receipt, receipt.id) |> Repo.preload(:receipt_ingredients)
+    # Extract name and description attributes
+    receipt_attrs = Map.take(attrs, ["name", "description", "id"])
+    ingredients_map = Map.drop(attrs, ["name", "description"])
+
+    # Convert ingredient data into ReceiptIngredient structs
+    receipt_ingredients = build_receipt_ingredients(Map.get(ingredients_map, "receipt_ingredients", %{}))
+
+    receipt
+    |> Receipt.changeset(receipt_attrs)
+    |> Ecto.Changeset.put_assoc(:receipt_ingredients, receipt_ingredients)
+    |> Repo.update()
   end
 end
