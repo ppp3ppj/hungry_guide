@@ -9,7 +9,10 @@ defmodule HungryGuide.Recipes.Receipt do
     field :name, :string
     field :description, :string
 
-    has_many :receipt_ingredients, Recipes.ReceiptIngredient, on_replace: :delete
+    has_many :receipt_ingredients, Recipes.ReceiptIngredient,
+      on_replace: :delete,
+      on_delete: :delete_all
+
     has_many :ingredients, through: [:receipt_ingredients, :ingredient]
 
     timestamps(type: :utc_datetime)
