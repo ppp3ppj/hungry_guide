@@ -108,6 +108,7 @@ defmodule HungryGuide.Recipes do
     receipt_attrs = Map.take(attrs, ["name", "description"])
     ingredients_map = Map.drop(attrs, ["name", "description"])
     # Convert ingredient data into ReceiptIngredient structs
+
     receipt_ingredients = build_receipt_ingredients(ingredients_map)
 
     %Receipt{}
@@ -117,16 +118,25 @@ defmodule HungryGuide.Recipes do
   end
 
   defp build_receipt_ingredients(ingredients_map) do
-    IO.inspect(ingredients_map, label: "data is:")
     # Convert each ingredient ID and quantity into a ReceiptIngredient struct
-    Enum.map(ingredients_map, fn {ingredient_id, quantity} ->
+
+    current_ingredients = ingredients_map
+    |> Enum.filter(fn {_id, qty} ->
+      decimal_qty = if is_integer(qty), do: Decimal.new(qty), else: qty
+      Decimal.compare(decimal_qty, Decimal.new(0)) == :gt
+    end)
+
+    IO.inspect(current_ingredients, label: "ingredients for add")
+    current_ingredients
+    |> Enum.map(fn {ingredient_id, quantity} ->
       %ReceiptIngredient{
         ingredient_id: ingredient_id,
         # assuming quantity is a string, convert to Decimal
-        #quantity: to_decimal(quantity)
+        # quantity: to_decimal(quantity)
         quantity: Decimal.new(quantity)
       }
     end)
+
   end
 
   def get_receipt_ingredients(receipt_id) do
@@ -145,7 +155,8 @@ defmodule HungryGuide.Recipes do
     ingredients_map = Map.drop(attrs, ["name", "description"])
 
     # Convert ingredient data into ReceiptIngredient structs
-    receipt_ingredients = build_receipt_ingredients(Map.get(ingredients_map, "receipt_ingredients", %{}))
+    receipt_ingredients =
+      build_receipt_ingredients(Map.get(ingredients_map, "receipt_ingredients", %{}))
 
     receipt
     |> Receipt.changeset(receipt_attrs)

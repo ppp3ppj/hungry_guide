@@ -25,10 +25,14 @@ defmodule HungryGuideWeb.ReceiptLive.Index do
     receipt_ingredients = HungryGuide.Recipes.get_receipt_ingredients(id)
     ingredients = Inventories.list_ingredients()
     receipt = Recipes.get_receipt!(id)
+    IO.inspect(receipt_ingredients, label: "Ingredients::")
 
-    # Create a map of ingredient IDs to quantities (for easy lookup)
+    # Start with all ingredients set to 0
+    initial_quantities = Map.new(ingredients, fn ingr -> {ingr.id, 0} end)
+
+    # Merge actual quantities from receipt_ingredients
     quantities =
-      Enum.reduce(receipt_ingredients, %{}, fn ri, acc ->
+      Enum.reduce(receipt_ingredients, initial_quantities, fn ri, acc ->
         Map.put(acc, ri.ingredient_id, ri.quantity)
       end)
 
