@@ -10,10 +10,15 @@ defmodule HungryGuideWeb.ReceiptLive.Show do
 
   @impl true
   def handle_params(%{"id" => id}, _, socket) do
+    receipt = Recipes.get_receipt!(id)
+    receipt_ingredients = Recipes.get_receipt_ingredients(id)
+    IO.inspect(receipt_ingredients)
+
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:receipt, Recipes.get_receipt!(id))}
+     |> assign(:receipt, receipt)
+     |> assign(:receipt_ingredients, receipt_ingredients)}
   end
 
   defp page_title(:show), do: "Show Receipt"
