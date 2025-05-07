@@ -35,4 +35,28 @@ defmodule HungryGuideWeb.ReceiptLive.Show do
 
   defp page_title(:show), do: "Show Receipt"
   defp page_title(:edit), do: "Edit Receipt"
+
+  @impl true
+  def handle_event("increment", %{"id" => ingr_id}, socket) do
+    updated_quantities =
+      Map.update!(socket.assigns.quantities, ingr_id, fn val ->
+        Decimal.add(val, 1)
+      end)
+
+    {:noreply, assign(socket, quantities: updated_quantities)}
+  end
+
+  @impl true
+  def handle_event("reset_ingredient", %{"id" => id}, socket) do
+    new_quantities = Map.put(socket.assigns.quantities, id, Decimal.new(0))
+    {:noreply, assign(socket, quantities: new_quantities)}
+  end
+
+  @impl true
+  def handle_event("update_quantity", %{"id" => id, "quantity" => quantity}, socket) do
+    {:noreply,
+     update(socket, :quantities, fn q ->
+       Map.put(q, id, Decimal.new(quantity))
+     end)}
+  end
 end
