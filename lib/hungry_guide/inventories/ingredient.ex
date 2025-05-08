@@ -1,4 +1,5 @@
 defmodule HungryGuide.Inventories.Ingredient do
+  alias HungryGuide.Recipes
   alias HungryGuide.Inventories
   use Ecto.Schema
   import Ecto.Changeset
@@ -10,6 +11,9 @@ defmodule HungryGuide.Inventories.Ingredient do
     field :quantity, :decimal
     #field :unit_id, :binary_id
     belongs_to :unit, Inventories.Unit
+
+    has_many :receipt_ingredients, Recipes.ReceiptIngredient
+    has_many :ingredient, through: [:receipt_ingredients, :receipt]
 
     timestamps(type: :utc_datetime)
   end
