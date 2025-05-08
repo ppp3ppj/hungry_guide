@@ -21,19 +21,26 @@ defmodule HungryGuideWeb.ReceiptLive.FormComponent do
       >
         <.input field={@form[:name]} type="text" label="Name" />
         <.input field={@form[:description]} type="text" label="Description" />
+
+        <div class="grid grid-cols-3 gap-4">
+          <%= for ingr <- @ingredients do %>
+            <button
+              type="button"
+              class="btn"
+              id={"btn-#{ingr.id}"}
+              phx-value-id={ingr.id}
+              phx-hook="ClickOrHold"
+            >
+              {ingr.name}
+              <div class="badge badge-sm badge-secondary">{@quantities[ingr.id]}</div>
+            </button>
+          <% end %>
+        </div>
+
         <:actions>
           <.button phx-disable-with="Saving...">Save Receipt</.button>
         </:actions>
       </.simple_form>
-
-      <div class="grid grid-cols-3 gap-4">
-        <%= for ingr <- @ingredients do %>
-          <button class="btn" id={"btn-#{ingr.id}"} phx-value-id={ingr.id} phx-hook="ClickOrHold">
-            {ingr.name}
-            <div class="badge badge-sm badge-secondary">{@quantities[ingr.id]}</div>
-          </button>
-        <% end %>
-      </div>
     </div>
     """
   end
