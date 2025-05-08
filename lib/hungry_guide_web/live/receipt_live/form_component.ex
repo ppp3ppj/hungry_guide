@@ -86,7 +86,7 @@ defmodule HungryGuideWeb.ReceiptLive.FormComponent do
 
   defp save_receipt(socket, :new, receipt_params) do
     ingredient_quantities = socket.assigns.quantities
-    params = Map.merge(receipt_params, ingredient_quantities)
+    params = Map.merge(receipt_params, %{"receipt_ingredients" => ingredient_quantities})
 
     case Recipes.create_receipt_with_ingredients(params) do
       {:ok, receipt} ->

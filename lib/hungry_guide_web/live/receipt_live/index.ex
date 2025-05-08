@@ -25,7 +25,6 @@ defmodule HungryGuideWeb.ReceiptLive.Index do
     receipt_ingredients = HungryGuide.Recipes.get_receipt_ingredients(id)
     ingredients = Inventories.list_ingredients()
     receipt = Recipes.get_receipt!(id)
-    IO.inspect(receipt_ingredients, label: "Ingredients::")
 
     # Start with all ingredients set to 0
     initial_quantities = Map.new(ingredients, fn ingr -> {ingr.id, 0} end)
@@ -47,13 +46,13 @@ defmodule HungryGuideWeb.ReceiptLive.Index do
 
   defp apply_action(socket, :new, _params) do
     ingredients = Inventories.list_ingredients()
-    intial_quantities = Map.new(ingredients, fn ingr -> {ingr.id, 0} end)
+    initial_quantities = Map.new(ingredients, fn ingr -> {ingr.id, 0} end)
 
     socket
     |> assign(:page_title, "New Receipt")
     |> assign(:receipt, %Receipt{})
     |> assign(:ingredients, ingredients)
-    |> assign(:quantities, intial_quantities)
+    |> assign(:quantities, initial_quantities)
   end
 
   defp apply_action(socket, :index, _params) do
