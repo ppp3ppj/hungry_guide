@@ -120,17 +120,11 @@ defmodule HungryGuide.Recipes do
 
   defp build_receipt_ingredients(ingredients_map) do
     # Convert each ingredient ID and quantity into a ReceiptIngredient struct
-
-    current_ingredients =
-      ingredients_map
-      |> Enum.filter(fn {_id, qty} ->
-        decimal_qty = if is_integer(qty), do: Decimal.new(qty), else: qty
-        Decimal.compare(decimal_qty, Decimal.new(0)) == :gt
-      end)
-
-    IO.inspect(current_ingredients, label: "ingredients for add")
-
-    current_ingredients
+    ingredients_map
+    |> Enum.filter(fn {_id, qty} ->
+      decimal_qty = if is_integer(qty), do: Decimal.new(qty), else: qty
+      Decimal.compare(decimal_qty, Decimal.new(0)) == :gt
+    end)
     |> Enum.map(fn {ingredient_id, quantity} ->
       %ReceiptIngredient{
         ingredient_id: ingredient_id,

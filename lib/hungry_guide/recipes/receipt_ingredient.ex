@@ -8,8 +8,6 @@ defmodule HungryGuide.Recipes.ReceiptIngredient do
   @foreign_key_type :binary_id
   schema "receipt_ingredients" do
     field :quantity, :decimal
-    #field :receipt_id, :binary_id
-    #field :ingredient_id, :binary_id
 
     belongs_to :receipt, Recipes.Receipt
     belongs_to :ingredient, Inventories.Ingredient
