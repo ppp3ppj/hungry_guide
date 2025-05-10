@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="[scrollbar-gutter:stable]" data-theme="cyberpunk">
+<html lang="en" class="[scrollbar-gutter:stable]" data-theme={@theme || "light"}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -13,6 +13,19 @@
   </head>
   <body class="bg-white">
     <ul class="relative z-10 flex items-center gap-4 px-4 sm:px-6 lg:px-8 justify-end">
+{@theme}
+      <.theme_selector
+        class="mr-2"
+        themes={[
+          {"Light", "light"},
+          {"Dark", "dark"},
+          {"Cupcake", "cupcake"},
+          {"Cyberpunk", "cyberpunk"},
+          {"Dracula", "dracula"},
+          {"Night", "night"},
+          {"Winter", "winter"}
+        ]}
+      />
       <%= if @current_user do %>
         <li class="text-[0.8125rem] leading-6 text-zinc-900">
           {@current_user.name} ({@current_user.email})

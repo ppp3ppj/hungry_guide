@@ -22,8 +22,14 @@ import {Socket} from "phoenix"
 import {LiveSocket} from "phoenix_live_view"
 import topbar from "../vendor/topbar"
 
+import  {HungryGuideThemeSelector} from "./hooks"
+
+
 // -- JS Hooks
-let Hooks = {}
+let Hooks = {
+    HungryGuideThemeSelector
+}
+
 let ClickOrHold = {
   mounted() {
     let timer = null
@@ -57,6 +63,37 @@ let ClickOrHold = {
 }
 
 Hooks.ClickOrHold = ClickOrHold
+
+
+Hooks.BackpexThemeSelector = HungryGuideThemeSelector
+/*
+Hooks.BackpexThemeSelector = {
+  mounted() {
+    const radios = this.el.querySelectorAll('input[type="radio"]')
+
+    const savedTheme = localStorage.getItem("theme")
+    if (savedTheme) {
+      document.documentElement.setAttribute("data-theme", savedTheme)
+      radios.forEach(radio => {
+        if (radio.value === savedTheme) {
+          radio.checked = true
+        }
+      })
+    }
+
+    radios.forEach(radio => {
+      radio.addEventListener("click", e => {
+        const theme = e.target.value
+        document.documentElement.setAttribute("data-theme", theme)
+        localStorage.setItem("theme", theme)
+      })
+    })
+  }
+}
+*/
+
+HungryGuideThemeSelector.setStoredTheme()
+console.log(Hooks)
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 let liveSocket = new LiveSocket("/live", Socket, {

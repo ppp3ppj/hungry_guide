@@ -17,6 +17,7 @@ defmodule HungryGuideWeb.CoreComponents do
   use Phoenix.Component
   use Gettext, backend: HungryGuideWeb.Gettext
 
+  alias HungryGuideWeb.Router
   alias Phoenix.LiveView.JS
 
   @doc """
@@ -672,5 +673,66 @@ defmodule HungryGuideWeb.CoreComponents do
   """
   def translate_errors(errors, field) when is_list(errors) do
     for {^field, {msg, opts}} <- errors, do: translate_error({msg, opts})
+  end
+
+
+  @doc """
+  Renders a theme selector.
+  """
+  @doc type: :component
+
+  attr :socket, :any, required: true
+  attr :class, :string, default: nil
+  attr :label, :string, default: "Theme"
+
+  attr :themes, :list,
+    doc: "A list of tuples with {theme_label, theme_name} format",
+    examples: [[{"Light", "light"}, {"Dark", "dark"}]]
+
+  def theme_selector(assigns) do
+    ~H"""
+    <div
+      id="backpex-theme-selector"
+      phx-hook="BackpexThemeSelector"
+      class={["dropdown dropdown-bottom dropdown-end", @class]}
+    >
+      <!-- Desktop Icon -->
+      <div tabindex="0" role="button" class="btn btn-ghost hidden md:flex">
+        {@label}
+        <!--{@label || "Theme"}
+        <Heroicons.chevron_down class="h-3 w-3" />
+
+        -->
+      </div>
+
+    <!-- Mobile Icon -->
+      <div tabindex="0" role="button" class="btn btn-square btn-ghost md:hidden">
+        <!--
+        <Heroicons.swatch class="h-6 w-6" />
+        -->
+      </div>
+
+      <form
+        data-cookie-path="/set_theme"
+        id="backpex-theme-selector-form"
+        class="dropdown-content bg-base-300 rounded-box max-h-96 overflow-y-scroll"
+      >
+        <ul tabindex="0" class="rounded-box z-1 menu w-48 outline-none">
+          <li :for={{label, theme_name} <- @themes} class="w-full">
+            <label class="has-checked:bg-neutral has-checked:text-neutral-content">
+              <input
+                type="radio"
+                name="theme-selector"
+                class="theme-controller hidden"
+                phx-click={JS.dispatch("backpex:theme-change")}
+                value={theme_name}
+              />
+              {label}
+            </label>
+          </li>
+        </ul>
+      </form>
+    </div>
+    """
   end
 end
