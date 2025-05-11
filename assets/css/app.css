@@ -2,6 +2,7 @@
    https://tailwindcss.com/docs/configuration */
 
 @import "tailwindcss";
+@plugin "../tailwind_heroicons.js";
 @plugin "@tailwindcss/forms";
 @plugin "daisyui" {
   themes: all;

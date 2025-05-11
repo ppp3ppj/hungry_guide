@@ -700,7 +700,7 @@ defmodule HungryGuideWeb.CoreComponents do
         <!--
         {@label}
         -->
-    🎨
+        <.icon name="hero-sparkles-solid" class="h-4 w-4" />
         <!--{@label || "Theme"}
         <Heroicons.chevron_down class="h-3 w-3" />
 
