@@ -13,17 +13,42 @@
   </head>
   <body class="bg-white">
     <ul class="relative z-10 flex items-center gap-4 px-4 sm:px-6 lg:px-8 justify-end">
-{@theme}
+      {@theme}
       <.theme_selector
         class="mr-2"
         themes={[
           {"Light", "light"},
           {"Dark", "dark"},
           {"Cupcake", "cupcake"},
+          {"Bumblebee", "bumblebee"},
+          {"Emerald", "emerald"},
+          {"Corporate", "corporate"},
+          {"Synthwave", "synthwave"},
+          {"Retro", "retro"},
           {"Cyberpunk", "cyberpunk"},
+          {"Valentine", "valentine"},
+          {"Halloween", "halloween"},
+          {"Garden", "garden"},
+          {"Forest", "forest"},
+          {"Aqua", "aqua"},
+          {"Lofi", "lofi"},
+          {"Pastel", "pastel"},
+          {"Fantasy", "fantasy"},
+          {"Wireframe", "wireframe"},
+          {"Black", "black"},
+          {"Luxury", "luxury"},
           {"Dracula", "dracula"},
+          {"CMYK", "cmyk"},
+          {"Autumn", "autumn"},
+          {"Business", "business"},
+          {"Acid", "acid"},
+          {"Lemonade", "lemonade"},
           {"Night", "night"},
-          {"Winter", "winter"}
+          {"Coffee", "coffee"},
+          {"Winter", "winter"},
+          {"Dim", "dim"},
+          {"Nord", "nord"},
+          {"Sunset", "sunset"}
         ]}
       />
       <%= if @current_user do %>
