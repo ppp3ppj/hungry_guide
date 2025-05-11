@@ -681,7 +681,7 @@ defmodule HungryGuideWeb.CoreComponents do
   """
   @doc type: :component
 
-  attr :socket, :any, required: true
+  #attr :socket, :any, required: true
   attr :class, :string, default: nil
   attr :label, :string, default: "Theme"
 
