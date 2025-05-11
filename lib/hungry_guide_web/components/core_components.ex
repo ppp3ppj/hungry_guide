@@ -675,13 +675,12 @@ defmodule HungryGuideWeb.CoreComponents do
     for {^field, {msg, opts}} <- errors, do: translate_error({msg, opts})
   end
 
-
   @doc """
   Renders a theme selector.
   """
   @doc type: :component
 
-  #attr :socket, :any, required: true
+  # attr :socket, :any, required: true
   attr :class, :string, default: nil
   attr :label, :string, default: "Theme"
 
@@ -698,7 +697,10 @@ defmodule HungryGuideWeb.CoreComponents do
     >
       <!-- Desktop Icon -->
       <div tabindex="0" role="button" class="btn btn-ghost hidden md:flex">
+        <!--
         {@label}
+        -->
+    🎨
         <!--{@label || "Theme"}
         <Heroicons.chevron_down class="h-3 w-3" />
 
@@ -707,6 +709,7 @@ defmodule HungryGuideWeb.CoreComponents do
 
     <!-- Mobile Icon -->
       <div tabindex="0" role="button" class="btn btn-square btn-ghost md:hidden">
+        [ICON]
         <!--
         <Heroicons.swatch class="h-6 w-6" />
         -->
@@ -724,7 +727,7 @@ defmodule HungryGuideWeb.CoreComponents do
                 type="radio"
                 name="theme-selector"
                 class="theme-controller hidden"
-                phx-click={JS.dispatch("backpex:theme-change")}
+                phx-click={JS.dispatch("hungryguide:theme-change")}
                 value={theme_name}
               />
               {label}

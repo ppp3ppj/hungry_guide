@@ -4,10 +4,11 @@ export default {
   mounted () {
     console.log("ThemeSelector hook mounted!")
     const form = document.querySelector('#backpex-theme-selector-form')
-    const storedTheme = window.localStorage.getItem('backpexTheme')
+    const storedTheme = window.localStorage.getItem('theme')
 
     // Marking current theme as active when the component is mounted
     if (storedTheme != null) {
+      console.log("storedTheme is", storedTheme)
       const activeThemeRadio = form.querySelector(
         `input[name='theme-selector'][value='${storedTheme}']`
       )
@@ -17,7 +18,7 @@ export default {
     }
 
     // Listen for theme change events
-    window.addEventListener('backpex:theme-change', this.handleThemeChange.bind(this))
+    window.addEventListener('hungryguide:theme-change', this.handleThemeChange.bind(this))
   },
 
   // Handle the theme change event, store it and update the server session
@@ -49,9 +50,9 @@ export default {
 
   // Set the stored theme when the LiveView is mounted
   setStoredTheme () {
-    console.log("settt")
     const storedTheme = window.localStorage.getItem('theme')
 
+    console.log("settt", storedTheme)
     if (storedTheme != null) {
       document.documentElement.setAttribute('data-theme', storedTheme)
     }
@@ -59,7 +60,7 @@ export default {
 
   // Clean up event listeners when the component is destroyed
   destroyed () {
-    window.removeEventListener('backpex:theme-change', this.handleThemeChange.bind(this))
+    window.removeEventListener('hungryguide:theme-change', this.handleThemeChange.bind(this))
   }
 }
 

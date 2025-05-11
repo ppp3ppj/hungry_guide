@@ -4,12 +4,16 @@ defmodule HungryGuideWeb.Plugs.ThemeSelectorPlug do
   """
   import Plug.Conn
 
-  @session_key "theme" # or nested like "preferences.theme" if needed
+  # or nested like "preferences.theme" if needed
+  @session_key "theme"
 
   def init(opts), do: opts
 
   def call(conn, _opts) do
+    IO.puts "Workkk"
     theme = get_session(conn, @session_key) || "light"
-    assign(conn, :theme, theme)
+
+    conn
+    |> assign(:theme, theme)
   end
 end
