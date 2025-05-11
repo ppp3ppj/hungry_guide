@@ -55,7 +55,6 @@ defmodule HungryGuide.MixProject do
       {:ex_machina, "~> 2.8.0", only: :test},
 
       # UI Icons ex-hero icons
-      {:ex_heroicons, "~> 3.1.0"},
       {:heroicons,
        github: "tailwindlabs/heroicons",
        tag: "v2.1.5",
