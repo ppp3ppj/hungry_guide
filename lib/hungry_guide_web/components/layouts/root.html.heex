@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="[scrollbar-gutter:stable]" data-theme="cyberpunk">
+<html lang="en" class="[scrollbar-gutter:stable]" data-theme={@theme || "light"}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -13,6 +13,43 @@
   </head>
   <body class="bg-white">
     <ul class="relative z-10 flex items-center gap-4 px-4 sm:px-6 lg:px-8 justify-end">
+      <.theme_selector
+        class="mr-2"
+        themes={[
+          {"Light", "light"},
+          {"Dark", "dark"},
+          {"Cupcake", "cupcake"},
+          {"Bumblebee", "bumblebee"},
+          {"Emerald", "emerald"},
+          {"Corporate", "corporate"},
+          {"Synthwave", "synthwave"},
+          {"Retro", "retro"},
+          {"Cyberpunk", "cyberpunk"},
+          {"Valentine", "valentine"},
+          {"Halloween", "halloween"},
+          {"Garden", "garden"},
+          {"Forest", "forest"},
+          {"Aqua", "aqua"},
+          {"Lofi", "lofi"},
+          {"Pastel", "pastel"},
+          {"Fantasy", "fantasy"},
+          {"Wireframe", "wireframe"},
+          {"Black", "black"},
+          {"Luxury", "luxury"},
+          {"Dracula", "dracula"},
+          {"CMYK", "cmyk"},
+          {"Autumn", "autumn"},
+          {"Business", "business"},
+          {"Acid", "acid"},
+          {"Lemonade", "lemonade"},
+          {"Night", "night"},
+          {"Coffee", "coffee"},
+          {"Winter", "winter"},
+          {"Dim", "dim"},
+          {"Nord", "nord"},
+          {"Sunset", "sunset"}
+        ]}
+      />
       <%= if @current_user do %>
         <li class="text-[0.8125rem] leading-6 text-zinc-900">
           {@current_user.name} ({@current_user.email})

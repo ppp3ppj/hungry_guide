@@ -11,6 +11,7 @@ defmodule HungryGuideWeb.Router do
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug :fetch_current_user
+    plug HungryGuideWeb.Plugs.ThemeSelectorPlug
   end
 
   pipeline :api do
@@ -21,6 +22,8 @@ defmodule HungryGuideWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+
+    post "/set_theme", ThemeController, :update
   end
 
   # Other scopes may use custom stacks.

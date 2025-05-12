@@ -22,8 +22,14 @@ import {Socket} from "phoenix"
 import {LiveSocket} from "phoenix_live_view"
 import topbar from "../vendor/topbar"
 
+import  {HungryGuideThemeSelector} from "./hooks"
+
+
 // -- JS Hooks
-let Hooks = {}
+let Hooks = {
+    HungryGuideThemeSelector
+}
+
 let ClickOrHold = {
   mounted() {
     let timer = null
@@ -57,6 +63,12 @@ let ClickOrHold = {
 }
 
 Hooks.ClickOrHold = ClickOrHold
+
+
+Hooks.BackpexThemeSelector = HungryGuideThemeSelector
+
+HungryGuideThemeSelector.setStoredTheme()
+console.log(Hooks)
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 let liveSocket = new LiveSocket("/live", Socket, {

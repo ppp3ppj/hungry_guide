@@ -44,13 +44,6 @@ defmodule HungryGuide.MixProject do
       {:phoenix_live_dashboard, "~> 0.8.3"},
       {:esbuild, "~> 0.8", runtime: Mix.env() == :dev},
       {:tailwind, "~> 0.3.1", runtime: Mix.env() == :dev},
-      {:heroicons,
-       github: "tailwindlabs/heroicons",
-       tag: "v2.1.1",
-       sparse: "optimized",
-       app: false,
-       compile: false,
-       depth: 1},
       {:swoosh, "~> 1.5"},
       {:finch, "~> 0.13"},
       {:telemetry_metrics, "~> 1.0"},
@@ -59,7 +52,16 @@ defmodule HungryGuide.MixProject do
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.1.1"},
       {:bandit, "~> 1.5"},
-      {:ex_machina, "~> 2.8.0", only: :test}
+      {:ex_machina, "~> 2.8.0", only: :test},
+
+      # UI Icons ex-hero icons
+      {:heroicons,
+       github: "tailwindlabs/heroicons",
+       tag: "v2.1.5",
+       sparse: "optimized",
+       app: false,
+       compile: false,
+       depth: 1}
     ]
   end
 
