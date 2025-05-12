@@ -66,31 +66,6 @@ Hooks.ClickOrHold = ClickOrHold
 
 
 Hooks.BackpexThemeSelector = HungryGuideThemeSelector
-/*
-Hooks.BackpexThemeSelector = {
-  mounted() {
-    const radios = this.el.querySelectorAll('input[type="radio"]')
-
-    const savedTheme = localStorage.getItem("theme")
-    if (savedTheme) {
-      document.documentElement.setAttribute("data-theme", savedTheme)
-      radios.forEach(radio => {
-        if (radio.value === savedTheme) {
-          radio.checked = true
-        }
-      })
-    }
-
-    radios.forEach(radio => {
-      radio.addEventListener("click", e => {
-        const theme = e.target.value
-        document.documentElement.setAttribute("data-theme", theme)
-        localStorage.setItem("theme", theme)
-      })
-    })
-  }
-}
-*/
 
 HungryGuideThemeSelector.setStoredTheme()
 console.log(Hooks)
