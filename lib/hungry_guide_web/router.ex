@@ -108,8 +108,4 @@ defmodule HungryGuideWeb.Router do
       live "/users/confirm", UserConfirmationInstructionsLive, :new
     end
   end
-
-  def cookie_path(socket) do
-    IO.inspect(socket, label: "current socket: ")
-  end
 end
