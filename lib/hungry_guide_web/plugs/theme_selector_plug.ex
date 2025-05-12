@@ -10,7 +10,6 @@ defmodule HungryGuideWeb.Plugs.ThemeSelectorPlug do
   def init(opts), do: opts
 
   def call(conn, _opts) do
-    IO.puts "Workkk"
     theme = get_session(conn, @session_key) || "light"
 
     conn
