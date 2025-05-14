@@ -105,10 +105,12 @@ defmodule HungryGuide.Recipes do
 
   def create_receipt_with_ingredients(attrs) do
     # Extract name and description attributes
-    receipt_attrs = Map.take(attrs, ["name", "description"])
-    ingredients_map = Map.drop(attrs, ["name", "description"])
+    receipt_attrs = Map.take(attrs, ["name", "description", "creator_id"])
+    ingredients_map = Map.drop(attrs, ["name", "description", "creator_id"])
     # Convert ingredient data into ReceiptIngredient structs
 
+
+    IO.inspect(receipt_attrs, label: "TTTT")
     receipt_ingredients =
       build_receipt_ingredients(Map.get(ingredients_map, "receipt_ingredients", %{}))
 
@@ -147,8 +149,8 @@ defmodule HungryGuide.Recipes do
   def update_receipt_with_ingredients(attrs, receipt) do
     receipt = Repo.get!(Receipt, receipt.id) |> Repo.preload(:receipt_ingredients)
     # Extract name and description attributes
-    receipt_attrs = Map.take(attrs, ["name", "description", "id"])
-    ingredients_map = Map.drop(attrs, ["name", "description"])
+    receipt_attrs = Map.take(attrs, ["name", "description", "id", "creator_id"])
+    ingredients_map = Map.drop(attrs, ["name", "description", "creator_id"])
 
     # Convert ingredient data into ReceiptIngredient structs
     receipt_ingredients =

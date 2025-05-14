@@ -15,14 +15,16 @@ defmodule HungryGuide.Recipes.Receipt do
 
     has_many :ingredients, through: [:receipt_ingredients, :ingredient]
 
+    belongs_to :creator, HungryGuide.Accounts.User
+
     timestamps(type: :utc_datetime)
   end
 
   @doc false
   def changeset(receipt, attrs) do
     receipt
-    |> cast(attrs, [:name, :description])
-    |> validate_required([:name, :description])
+    |> cast(attrs, [:name, :description, :creator_id])
+    |> validate_required([:name, :description, :creator_id])
     |> cast_assoc(:receipt_ingredients)
   end
 end
