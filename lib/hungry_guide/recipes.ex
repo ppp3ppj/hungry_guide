@@ -22,6 +22,27 @@ defmodule HungryGuide.Recipes do
     Repo.all(Receipt)
   end
 
+  def list_receipts, do: list_receipts([])
+
+  def list_receipts(criteria) when is_list(criteria) do
+    Repo.all(receipt_query(criteria))
+  end
+
+  defp receipt_query(criteria) do
+    query = from(b in Receipt)
+
+    Enum.reduce(criteria, query, fn
+      {:user, user}, query ->
+        from b in query, where: b.creator_id == ^user.id
+
+      {:preload, bindings}, query ->
+        preload(query, ^bindings)
+
+      _, query ->
+        query
+    end)
+  end
+
   @doc """
   Gets a single receipt.
 
@@ -109,8 +130,8 @@ defmodule HungryGuide.Recipes do
     ingredients_map = Map.drop(attrs, ["name", "description", "creator_id"])
     # Convert ingredient data into ReceiptIngredient structs
 
-
     IO.inspect(receipt_attrs, label: "TTTT")
+
     receipt_ingredients =
       build_receipt_ingredients(Map.get(ingredients_map, "receipt_ingredients", %{}))
 

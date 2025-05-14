@@ -7,9 +7,17 @@ defmodule HungryGuideWeb.ReceiptLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
+    receipts =
+      Recipes.list_receipts(
+        user: socket.assigns.current_user,
+        preload: :creator
+      )
+
     socket =
       socket
-      |> stream(:receipts, Recipes.list_receipts())
+      |> stream(:receipts, receipts)
+
+    #|> stream(:receipts, Recipes.list_receipts())
 
     # {:ok, stream(socket, :receipts, Recipes.list_receipts())}
     {:ok, socket}
