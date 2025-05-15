@@ -17,7 +17,7 @@ defmodule HungryGuideWeb.ReceiptLive.Index do
       socket
       |> stream(:receipts, receipts)
 
-    #|> stream(:receipts, Recipes.list_receipts())
+    # |> stream(:receipts, Recipes.list_receipts())
 
     # {:ok, stream(socket, :receipts, Recipes.list_receipts())}
     {:ok, socket}
@@ -28,28 +28,39 @@ defmodule HungryGuideWeb.ReceiptLive.Index do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  defp apply_action(socket, :edit, %{"id" => id}) do
+  defp apply_action(socket, :edit, %{"id" => id}) when is_uuid(id) do
     # Fetch receipt_ingredients and the receipt
     receipt_ingredients = HungryGuide.Recipes.get_receipt_ingredients(id)
     ingredients = Inventories.list_ingredients()
-    receipt = Recipes.get_receipt!(id)
+    # receipt = Recipes.get_receipt!(id)
+    receipt =
+      Recipes.get_receipt(id,
+        user: socket.assigns.current_user,
+        preload: :creator
+      )
 
-    # Start with all ingredients set to 0
-    initial_quantities = Map.new(ingredients, fn ingr -> {ingr.id, 0} end)
+    if receipt do
+      # Start with all ingredients set to 0
+      initial_quantities = Map.new(ingredients, fn ingr -> {ingr.id, 0} end)
 
-    # Merge actual quantities from receipt_ingredients
-    quantities =
-      Enum.reduce(receipt_ingredients, initial_quantities, fn ri, acc ->
-        Map.put(acc, ri.ingredient_id, ri.quantity)
-      end)
+      # Merge actual quantities from receipt_ingredients
+      quantities =
+        Enum.reduce(receipt_ingredients, initial_quantities, fn ri, acc ->
+          Map.put(acc, ri.ingredient_id, ri.quantity)
+        end)
 
-    # Assign receipt_ingredients and quantities to the socket
-    socket
-    |> assign(:page_title, "Edit Receipt")
-    |> assign(:ingredients, ingredients)
-    |> assign(:receipt, receipt)
-    |> assign(:receipt_ingredients, receipt_ingredients)
-    |> assign(:quantities, quantities)
+      # Assign receipt_ingredients and quantities to the socket
+      socket
+      |> assign(:page_title, "Edit Receipt")
+      |> assign(:ingredients, ingredients)
+      |> assign(:receipt, receipt)
+      |> assign(:receipt_ingredients, receipt_ingredients)
+      |> assign(:quantities, quantities)
+    else
+      socket
+      |> put_flash(:error, "Receipt not found")
+      |> redirect(to: ~p"/receipts")
+    end
   end
 
   defp apply_action(socket, :new, _params) do

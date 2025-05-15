@@ -59,6 +59,10 @@ defmodule HungryGuide.Recipes do
   """
   def get_receipt!(id), do: Repo.get!(Receipt, id)
 
+  def get_receipt(id, criteria \\ %{}) do
+    Repo.get(receipt_query(criteria), id)
+  end
+
   @doc """
   Creates a receipt.
 
