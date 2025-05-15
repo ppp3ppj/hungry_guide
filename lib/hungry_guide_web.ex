@@ -55,6 +55,8 @@ defmodule HungryGuideWeb do
       use Phoenix.LiveView,
         layout: {HungryGuideWeb.Layouts, :app}
 
+      import HungryGuide.Guards
+
       unquote(html_helpers())
     end
   end
