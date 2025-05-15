@@ -134,8 +134,6 @@ defmodule HungryGuide.Recipes do
     ingredients_map = Map.drop(attrs, ["name", "description", "creator_id"])
     # Convert ingredient data into ReceiptIngredient structs
 
-    IO.inspect(receipt_attrs, label: "TTTT")
-
     receipt_ingredients =
       build_receipt_ingredients(Map.get(ingredients_map, "receipt_ingredients", %{}))
 
