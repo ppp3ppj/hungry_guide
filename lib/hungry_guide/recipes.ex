@@ -22,6 +22,27 @@ defmodule HungryGuide.Recipes do
     Repo.all(Receipt)
   end
 
+  def list_receipts, do: list_receipts([])
+
+  def list_receipts(criteria) when is_list(criteria) do
+    Repo.all(receipt_query(criteria))
+  end
+
+  defp receipt_query(criteria) do
+    query = from(b in Receipt)
+
+    Enum.reduce(criteria, query, fn
+      {:user, user}, query ->
+        from b in query, where: b.creator_id == ^user.id
+
+      {:preload, bindings}, query ->
+        preload(query, ^bindings)
+
+      _, query ->
+        query
+    end)
+  end
+
   @doc """
   Gets a single receipt.
 
@@ -37,6 +58,10 @@ defmodule HungryGuide.Recipes do
 
   """
   def get_receipt!(id), do: Repo.get!(Receipt, id)
+
+  def get_receipt(id, criteria \\ %{}) do
+    Repo.get(receipt_query(criteria), id)
+  end
 
   @doc """
   Creates a receipt.
@@ -105,8 +130,8 @@ defmodule HungryGuide.Recipes do
 
   def create_receipt_with_ingredients(attrs) do
     # Extract name and description attributes
-    receipt_attrs = Map.take(attrs, ["name", "description"])
-    ingredients_map = Map.drop(attrs, ["name", "description"])
+    receipt_attrs = Map.take(attrs, ["name", "description", "creator_id"])
+    ingredients_map = Map.drop(attrs, ["name", "description", "creator_id"])
     # Convert ingredient data into ReceiptIngredient structs
 
     receipt_ingredients =
@@ -147,8 +172,8 @@ defmodule HungryGuide.Recipes do
   def update_receipt_with_ingredients(attrs, receipt) do
     receipt = Repo.get!(Receipt, receipt.id) |> Repo.preload(:receipt_ingredients)
     # Extract name and description attributes
-    receipt_attrs = Map.take(attrs, ["name", "description", "id"])
-    ingredients_map = Map.drop(attrs, ["name", "description"])
+    receipt_attrs = Map.take(attrs, ["name", "description", "id", "creator_id"])
+    ingredients_map = Map.drop(attrs, ["name", "description", "creator_id"])
 
     # Convert ingredient data into ReceiptIngredient structs
     receipt_ingredients =

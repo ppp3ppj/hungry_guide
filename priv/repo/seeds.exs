@@ -12,19 +12,36 @@
 
 alias HungryGuide.Accounts
 admin_email = "admin@admin.com"
-admin_password = "supersecret123"
+password = "supersecret123"
 admin_name = "admin"
+
+user_email = "user@user.com"
+user_name = "user"
 
 case Accounts.get_user_by_email(admin_email) do
   nil ->
     {:ok, _admin} = Accounts.register_user(%{
       name: admin_name,
       email: admin_email,
-      password: admin_password
+      password: password
     })
 
     IO.puts("Default admin user created: #{admin_email}")
 
   _user ->
     IO.puts("Admin user already exists: #{admin_email}")
+end
+
+case Accounts.get_user_by_email(user_email) do
+  nil ->
+    {:ok, _user} = Accounts.register_user(%{
+      name: user_name,
+      email: user_email,
+      password: password
+    })
+
+    IO.puts("Default user created: #{user_email}")
+
+  _user ->
+    IO.puts("User already exists: #{user_email}")
 end
