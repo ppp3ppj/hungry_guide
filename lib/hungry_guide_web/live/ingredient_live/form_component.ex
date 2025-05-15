@@ -20,7 +20,6 @@ defmodule HungryGuideWeb.IngredientLive.FormComponent do
         phx-submit="save"
       >
         <.input field={@form[:name]} type="text" label="Name" />
-        <.input field={@form[:quantity]} type="number" label="Quantity" step="any" />
         <.input field={@form[:unit_id]} type="select" options={@units} label="Unit" />
 
         <:actions>

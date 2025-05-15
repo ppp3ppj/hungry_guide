@@ -8,7 +8,6 @@ defmodule HungryGuide.Inventories.Ingredient do
   @foreign_key_type :binary_id
   schema "ingredients" do
     field :name, :string
-    field :quantity, :decimal
     #field :unit_id, :binary_id
     belongs_to :unit, Inventories.Unit
 
@@ -21,7 +20,7 @@ defmodule HungryGuide.Inventories.Ingredient do
   @doc false
   def changeset(ingredient, attrs) do
     ingredient
-    |> cast(attrs, [:name, :quantity, :unit_id])
-    |> validate_required([:name, :quantity, :unit_id])
+    |> cast(attrs, [:name, :unit_id])
+    |> validate_required([:name, :unit_id])
   end
 end
