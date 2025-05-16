@@ -61,7 +61,11 @@ defmodule HungryGuide.MixProject do
        sparse: "optimized",
        app: false,
        compile: false,
-       depth: 1}
+       depth: 1},
+
+      # Image upload
+      {:waffle, "~> 1.1"},
+      {:waffle_ecto, "~> 0.0"},
     ]
   end
 

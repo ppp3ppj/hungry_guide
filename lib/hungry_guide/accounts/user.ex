@@ -1,4 +1,5 @@
 defmodule HungryGuide.Accounts.User do
+  alias HungryGuide.Accounts.Avatar
   use Ecto.Schema
   import Ecto.Changeset
   @primary_key {:id, :binary_id, autogenerate: true}
@@ -10,6 +11,8 @@ defmodule HungryGuide.Accounts.User do
     field :current_password, :string, virtual: true, redact: true
     field :confirmed_at, :utc_datetime
     field :name, :string
+
+    field :avatar, Avatar.Type
 
     timestamps(type: :utc_datetime)
   end

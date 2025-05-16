@@ -84,3 +84,9 @@ config :phoenix_live_view,
 
 # Disable swoosh api client as it is only required for production adapters.
 config :swoosh, :api_client, false
+
+# Config waffle image upload
+config :waffle,
+  storage: Waffle.Storage.Local
+
+# asset_host: "http://static.example.com" # or {:system, "ASSET_HOST"}

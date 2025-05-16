@@ -350,4 +350,10 @@ defmodule HungryGuide.Accounts do
       {:error, :user, changeset, _} -> {:error, changeset}
     end
   end
+
+  def update_user_avatar(%User{} = user, upload_file) do
+    user
+    |> User.avatar_changeset(%{"avatar" => upload_file})
+    |> Repo.update()
+  end
 end

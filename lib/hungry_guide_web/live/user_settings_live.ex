@@ -12,6 +12,16 @@ defmodule HungryGuideWeb.UserSettingsLive do
 
     <div class="space-y-12 divide-y">
       <div>
+        <form id="upload_form" multipart phx-submit="save_avatar">
+          <p>{@current_user.avatar || "Empty"}</p>
+          <!--
+          <input type="file" name="user[avatar]" id="avatar" class="file-input" accept="image/*" />
+          -->
+          <.live_file_input upload={@uploads.avatar} />
+          <button class="btn" type="submit">Default</button>
+        </form>
+      </div>
+      <div>
         <.simple_form
           for={@email_form}
           id="email_form"
@@ -99,6 +109,7 @@ defmodule HungryGuideWeb.UserSettingsLive do
       |> assign(:email_form, to_form(email_changeset))
       |> assign(:password_form, to_form(password_changeset))
       |> assign(:trigger_submit, false)
+      |> allow_upload(:avatar, accept: ~w(.jpg .jpeg .png), max_entries: 1, auto_upload: true)
 
     {:ok, socket}
   end
@@ -162,6 +173,40 @@ defmodule HungryGuideWeb.UserSettingsLive do
 
       {:error, changeset} ->
         {:noreply, assign(socket, password_form: to_form(changeset))}
+    end
+  end
+
+  def handle_event("save_avatar", _params, socket) do
+    user = socket.assigns.current_user
+
+    uploaded =
+      consume_uploaded_entries(socket, :avatar, fn %{path: path}, entry ->
+        IO.puts("Test")
+        file = %Plug.Upload{
+          path: path,
+          filename: entry.client_name,
+          content_type: entry.client_type
+        }
+
+        IO.inspect(path, label: "path")
+        # This will use Waffle to store the file
+        case Accounts.update_user_avatar(user, file) do
+          {:ok, updated_user} -> {:ok, updated_user.avatar}
+          {:error, _} -> {:error, :upload_failed}
+        end
+      end)
+
+    IO.inspect(uploaded, label: "test")
+
+    case uploaded do
+      [avatar_url] ->
+        {:noreply,
+         socket
+         |> put_flash(:info, "Avatar updated")
+         |> assign(:current_user, %{user | avatar: avatar_url})}
+
+      _ ->
+        {:noreply, put_flash(socket, :error, "Upload failed")}
     end
   end
 end
