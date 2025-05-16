@@ -11,6 +11,15 @@ defmodule HungryGuideWeb.UserSettingsLive do
     </.header>
 
     <div class="space-y-12 divide-y">
+      <form phx-submit="save_avatar" phx-change="avatar_validate">
+        <%= if @current_user.avatar do %>
+          <img src={@current_user.avatar} alt="User Avatar" width="100" />
+        <% else %>
+          <p>No avatar uploaded</p>
+        <% end %>
+        <.live_file_input upload={@uploads.avatar} />
+        <button type="submit">Upload</button>
+      </form>
       <div>
         <.simple_form
           for={@email_form}
@@ -99,6 +108,8 @@ defmodule HungryGuideWeb.UserSettingsLive do
       |> assign(:email_form, to_form(email_changeset))
       |> assign(:password_form, to_form(password_changeset))
       |> assign(:trigger_submit, false)
+      |> assign(:uploaded_files, [])
+      |> allow_upload(:avatar, accept: ~w(.jpg .jpeg .png), max_entries: 1)
 
     {:ok, socket}
   end
@@ -163,5 +174,33 @@ defmodule HungryGuideWeb.UserSettingsLive do
       {:error, changeset} ->
         {:noreply, assign(socket, password_form: to_form(changeset))}
     end
+  end
+
+  def handle_event("save_avatar", _params, socket) do
+    user = socket.assigns.current_user
+
+    uploaded_files =
+      consume_uploaded_entries(socket, :avatar, fn %{path: path}, _entry ->
+        dest =
+          Path.join(
+            Application.app_dir(:hungry_guide, "priv/static/uploads"),
+            Path.basename(path)
+          )
+
+        IO.inspect(dest, label: "Test")
+        IO.puts(dest)
+
+        File.cp!(path, dest)
+
+        # Return the relative public URL to store in DB
+        {:ok, ~p"/uploads/#{Path.basename(dest)}"}
+      end)
+
+    {:noreply, update(socket, :uploaded_files, &(&1 ++ uploaded_files))}
+  end
+
+  @impl Phoenix.LiveView
+  def handle_event("avatar_validate", _params, socket) do
+    {:noreply, socket}
   end
 end

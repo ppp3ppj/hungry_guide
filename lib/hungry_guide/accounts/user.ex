@@ -11,6 +11,8 @@ defmodule HungryGuide.Accounts.User do
     field :confirmed_at, :utc_datetime
     field :name, :string
 
+    field :avatar, :string
+
     timestamps(type: :utc_datetime)
   end
 
