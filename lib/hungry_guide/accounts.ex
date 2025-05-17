@@ -351,9 +351,8 @@ defmodule HungryGuide.Accounts do
     end
   end
 
-  def update_user_avatar(%User{} = user, avatar_path) do
+  def update_user_avatar(%User{} = user, %{avatar: avatar_path}) do
     user
-    |> Ecto.Changeset.change()
     |> Ecto.Changeset.cast(%{avatar: avatar_path}, [:avatar])
     |> Repo.update()
   end

@@ -176,27 +176,83 @@ defmodule HungryGuideWeb.UserSettingsLive do
     end
   end
 
+  defp list_existing_files(%{images: images} = _item) when is_list(images), do: images
+  defp list_existing_files(_item), do: []
+
+  defp put_upload_change(_socket, params, item, uploaded_entries, removed_entries, action) do
+    existing_files = list_existing_files(item) -- removed_entries
+
+    new_entries =
+      case action do
+        :validate ->
+          elem(uploaded_entries, 1)
+
+        :insert ->
+          elem(uploaded_entries, 0)
+      end
+
+    files = existing_files || Enum.map(new_entries, fn entry -> file_name(entry) end)
+
+    Map.put(params, "images", files)
+  end
+
+  defp consume_upload(_socket, _item, %{path: path} = _meta, entry) do
+    file_name = file_name(entry)
+    dest = Path.join([:code.priv_dir(:hungry_guide), "static", upload_dir(), file_name])
+
+    # Ensure destination folder exists
+    File.mkdir_p!(Path.dirname(dest))
+
+    File.cp!(path, dest)
+
+    {:ok, file_url(file_name)}
+  end
+
+  defp remove_upload(_socket, _item, removed_entries) do
+    for file <- removed_entries do
+      path = Path.join([:code.priv_dir(:hungry_guide), "static", upload_dir(), file])
+      File.rm!(path)
+    end
+  end
+
+  defp file_url(file_name) do
+    static_path = Path.join([upload_dir(), file_name])
+    Phoenix.VerifiedRoutes.static_url(HungryGuideWeb.Endpoint, "/" <> static_path)
+  end
+
+  defp file_name(entry) do
+    [ext | _tail] = MIME.extensions(entry.client_type)
+    "#{entry.uuid}.#{ext}"
+  end
+
+  defp upload_dir, do: Path.join(["uploads", "avatar", "images"])
+
   def handle_event("save_avatar", _params, socket) do
     user = socket.assigns.current_user
 
-    uploaded_files =
-      consume_uploaded_entries(socket, :avatar, fn %{path: path}, _entry ->
-        dest =
-          Path.join(
-            Application.app_dir(:hungry_guide, "priv/static/uploads"),
-            Path.basename(path)
-          )
-
-        IO.inspect(dest, label: "Test")
-        IO.puts(dest)
-
-        File.cp!(path, dest)
-
-        # Return the relative public URL to store in DB
-        {:ok, ~p"/uploads/#{Path.basename(dest)}"}
+    uploaded =
+      consume_uploaded_entries(socket, :avatar, fn meta, entry ->
+        consume_upload(socket, user, meta, entry)
       end)
 
-    {:noreply, update(socket, :uploaded_files, &(&1 ++ uploaded_files))}
+    IO.inspect(uploaded, label: "Debug uploaded")
+
+    case uploaded do
+      [avatar_url] ->
+        case Accounts.update_user_avatar(user, %{avatar: avatar_url}) do
+          {:ok, updated_user} ->
+            {:noreply,
+             socket
+             |> put_flash(:info, "Avatar updated.")
+             |> assign(:current_user, updated_user)}
+
+          {:error, _changeset} ->
+            {:noreply, put_flash(socket, :error, "Failed to update avatar.")}
+        end
+
+      _ ->
+        {:noreply, put_flash(socket, :error, "No file uploaded.")}
+    end
   end
 
   @impl Phoenix.LiveView
