@@ -14,11 +14,21 @@ defmodule HungryGuideWeb.UserSettingsLive do
       <form phx-submit="save_avatar" phx-change="avatar_validate">
         <%= if @current_user.avatar do %>
           <img src={@current_user.avatar} alt="User Avatar" width="100" />
+          <div>
+            <p>{Path.basename(@current_user.avatar)}</p>
+            <button
+              type="button"
+              phx-value-filename={Path.basename(@current_user.avatar)}
+              phx-click="remove_avatar"
+            >
+              X
+            </button>
+          </div>
         <% else %>
           <p>No avatar uploaded</p>
+          <.live_file_input upload={@uploads.avatar} />
+          <button type="submit">Upload</button>
         <% end %>
-        <.live_file_input upload={@uploads.avatar} />
-        <button type="submit">Upload</button>
       </form>
       <div>
         <.simple_form
@@ -258,5 +268,24 @@ defmodule HungryGuideWeb.UserSettingsLive do
   @impl Phoenix.LiveView
   def handle_event("avatar_validate", _params, socket) do
     {:noreply, socket}
+  end
+
+  def handle_event("remove_avatar", %{"filename" => filename}, socket) do
+    user = socket.assigns.current_user
+    static_dir = Application.app_dir(:hungry_guide, "priv/static")
+    avatar_path = Path.join(["uploads", "avatar", "images", filename])
+    full_path = Path.join(static_dir, avatar_path)
+
+    # Delete file from disk if it exists
+    if File.exists?(full_path), do: File.rm!(full_path)
+
+    # Remove avatar reference in DB
+    {:ok, updated_user} =
+      Accounts.update_user_avatar(user, %{avatar: nil})
+
+    {:noreply,
+     socket
+     |> put_flash(:info, "Avatar removed")
+     |> assign(:current_user, updated_user)}
   end
 end
