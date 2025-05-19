@@ -128,7 +128,7 @@ defmodule HungryGuideWeb.UserSettingsLive do
       |> assign(:email_form, to_form(email_changeset))
       |> assign(:password_form, to_form(password_changeset))
       |> assign(:trigger_submit, false)
-      |> allow_upload(:avatar, accept: ~w(.jpg .jpeg .png), max_entries: 1)
+      |> allow_upload(:avatar, accept: ~w(.jpg .jpeg .png), max_entries: 1, max_file_size: 2_000_000)
 
     {:ok, socket}
   end
