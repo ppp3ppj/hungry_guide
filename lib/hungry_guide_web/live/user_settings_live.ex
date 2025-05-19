@@ -255,8 +255,6 @@ defmodule HungryGuideWeb.UserSettingsLive do
         consume_upload(socket, user, meta, entry)
       end)
 
-    IO.inspect(uploaded, label: "Debug uploaded")
-
     case uploaded do
       [avatar_url] ->
         case Accounts.update_user_avatar(user, %{avatar: avatar_url}) do
