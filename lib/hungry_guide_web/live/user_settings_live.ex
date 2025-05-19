@@ -31,7 +31,7 @@ defmodule HungryGuideWeb.UserSettingsLive do
           </div>
         <% else %>
           <fieldset class="fieldset">
-            <legend class="fieldset-legend">Pick a avatar file</legend>
+            <legend class="fieldset-legend">Pick an avatar file</legend>
             <div>
               <.live_file_input class="file-input" upload={@uploads.avatar} />
               <button class="btn" type="submit">Upload</button>
