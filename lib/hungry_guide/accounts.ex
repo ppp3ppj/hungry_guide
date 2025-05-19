@@ -350,4 +350,19 @@ defmodule HungryGuide.Accounts do
       {:error, :user, changeset, _} -> {:error, changeset}
     end
   end
+
+  @doc """
+  Updates the avatar of a given user.
+  ## Parameters
+  - `user`: A `%User{}` struct representing the user whose avatar is being updated.
+  - `attrs`: A map containing the `:avatar` key with the new avatar path.
+  ## Returns
+  - `{:ok, %User{}}` if the update is successful.
+  - `{:error, %Ecto.Changeset{}}` if the update fails.
+  """
+  def update_user_avatar(%User{} = user, %{avatar: avatar_path}) do
+    user
+    |> Ecto.Changeset.cast(%{avatar: avatar_path}, [:avatar])
+    |> Repo.update()
+  end
 end

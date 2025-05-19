@@ -11,6 +11,35 @@ defmodule HungryGuideWeb.UserSettingsLive do
     </.header>
 
     <div class="space-y-12 divide-y">
+      <form phx-submit="save_avatar" phx-change="avatar_validate" class="py-3">
+        <%= if @current_user.avatar do %>
+          <div class="avatar">
+            <div class="w-32 rounded">
+              <img src={@current_user.avatar} alt="User Avatar" width="100" />
+            </div>
+          </div>
+          <div>
+            <span>{Path.basename(@current_user.avatar)}</span>
+            <button
+              class="btn"
+              type="button"
+              phx-value-filename={Path.basename(@current_user.avatar)}
+              phx-click="remove_avatar"
+            >
+              <.icon name="hero-x-mark-solid" class="h-4 w-4" />
+            </button>
+          </div>
+        <% else %>
+          <fieldset class="fieldset">
+            <legend class="fieldset-legend">Pick an avatar file</legend>
+            <div>
+              <.live_file_input class="file-input" upload={@uploads.avatar} />
+              <button class="btn" type="submit">Upload</button>
+            </div>
+            <label class="label">Max size 2MB</label>
+          </fieldset>
+        <% end %>
+      </form>
       <div>
         <.simple_form
           for={@email_form}
@@ -99,6 +128,7 @@ defmodule HungryGuideWeb.UserSettingsLive do
       |> assign(:email_form, to_form(email_changeset))
       |> assign(:password_form, to_form(password_changeset))
       |> assign(:trigger_submit, false)
+      |> allow_upload(:avatar, accept: ~w(.jpg .jpeg .png), max_entries: 1, max_file_size: 2_000_000)
 
     {:ok, socket}
   end
@@ -163,5 +193,111 @@ defmodule HungryGuideWeb.UserSettingsLive do
       {:error, changeset} ->
         {:noreply, assign(socket, password_form: to_form(changeset))}
     end
+  end
+
+  defp list_existing_files(%{images: images} = _item) when is_list(images), do: images
+  defp list_existing_files(_item), do: []
+
+  defp put_upload_change(_socket, params, item, uploaded_entries, removed_entries, action) do
+    existing_files = list_existing_files(item) -- removed_entries
+
+    new_entries =
+      case action do
+        :validate ->
+          elem(uploaded_entries, 1)
+
+        :insert ->
+          elem(uploaded_entries, 0)
+      end
+
+    files = existing_files || Enum.map(new_entries, fn entry -> file_name(entry) end)
+
+    Map.put(params, "images", files)
+  end
+
+  defp consume_upload(_socket, _item, %{path: path} = _meta, entry) do
+    file_name = file_name(entry)
+    dest = Path.join([:code.priv_dir(:hungry_guide), "static", upload_dir(), file_name])
+
+    # Ensure destination folder exists
+    File.mkdir_p!(Path.dirname(dest))
+
+    # using File.cp! my crash the server on I/O error; consider handling failures gracefully
+    case File.cp(path, dest) do
+      :ok -> {:ok, file_url(file_name)}
+      {:error, reason} -> {:error, reason}
+    end
+
+    # File.cp!(path, dest)
+    # {:ok, file_url(file_name)}
+  end
+
+  defp remove_upload(_socket, _item, removed_entries) do
+    for file <- removed_entries do
+      path = Path.join([:code.priv_dir(:hungry_guide), "static", upload_dir(), file])
+      File.rm!(path)
+    end
+  end
+
+  defp file_url(file_name) do
+    static_path = Path.join([upload_dir(), file_name])
+    Phoenix.VerifiedRoutes.static_url(HungryGuideWeb.Endpoint, "/" <> static_path)
+  end
+
+  defp file_name(entry) do
+    [ext | _tail] = MIME.extensions(entry.client_type)
+    "#{entry.uuid}.#{ext}"
+  end
+
+  defp upload_dir, do: Path.join(["uploads", "avatar", "images"])
+
+  def handle_event("save_avatar", _params, socket) do
+    user = socket.assigns.current_user
+
+    uploaded =
+      consume_uploaded_entries(socket, :avatar, fn meta, entry ->
+        consume_upload(socket, user, meta, entry)
+      end)
+
+    case uploaded do
+      [avatar_url] ->
+        case Accounts.update_user_avatar(user, %{avatar: avatar_url}) do
+          {:ok, updated_user} ->
+            {:noreply,
+             socket
+             |> put_flash(:info, "Avatar updated.")
+             |> assign(:current_user, updated_user)}
+
+          {:error, _changeset} ->
+            {:noreply, put_flash(socket, :error, "Failed to update avatar.")}
+        end
+
+      _ ->
+        {:noreply, put_flash(socket, :error, "No file uploaded.")}
+    end
+  end
+
+  @impl Phoenix.LiveView
+  def handle_event("avatar_validate", _params, socket) do
+    {:noreply, socket}
+  end
+
+  def handle_event("remove_avatar", %{"filename" => filename}, socket) do
+    user = socket.assigns.current_user
+    static_dir = Application.app_dir(:hungry_guide, "priv/static")
+    avatar_path = Path.join(["uploads", "avatar", "images", filename])
+    full_path = Path.join(static_dir, avatar_path)
+
+    # Delete file from disk if it exists
+    if File.exists?(full_path), do: File.rm!(full_path)
+
+    # Remove avatar reference in DB
+    {:ok, updated_user} =
+      Accounts.update_user_avatar(user, %{avatar: nil})
+
+    {:noreply,
+     socket
+     |> put_flash(:info, "Avatar removed")
+     |> assign(:current_user, updated_user)}
   end
 end

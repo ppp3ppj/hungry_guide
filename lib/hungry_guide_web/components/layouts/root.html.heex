@@ -55,10 +55,7 @@
           {@current_user.name} ({@current_user.email})
         </li>
         <li>
-          <.link
-            href={~p"/users/settings"}
-            class="text-[0.8125rem] leading-6 font-semibold"
-          >
+          <.link href={~p"/users/settings"} class="text-[0.8125rem] leading-6 font-semibold">
             Settings
           </.link>
         </li>
@@ -73,18 +70,12 @@
         </li>
       <% else %>
         <li>
-          <.link
-            href={~p"/users/register"}
-            class="text-[0.8125rem] leading-6 font-semibold"
-          >
+          <.link href={~p"/users/register"} class="text-[0.8125rem] leading-6 font-semibold">
             Register
           </.link>
         </li>
         <li>
-          <.link
-            href={~p"/users/log_in"}
-            class="text-[0.8125rem] leading-6 font-semibold"
-          >
+          <.link href={~p"/users/log_in"} class="text-[0.8125rem] leading-6 font-semibold">
             Log in
           </.link>
         </li>
