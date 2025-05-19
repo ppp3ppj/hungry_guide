@@ -11,23 +11,33 @@ defmodule HungryGuideWeb.UserSettingsLive do
     </.header>
 
     <div class="space-y-12 divide-y">
-      <form phx-submit="save_avatar" phx-change="avatar_validate">
+      <form phx-submit="save_avatar" phx-change="avatar_validate" class="py-3">
         <%= if @current_user.avatar do %>
-          <img src={@current_user.avatar} alt="User Avatar" width="100" />
+          <div class="avatar">
+            <div class="w-32 rounded">
+              <img src={@current_user.avatar} alt="User Avatar" width="100" />
+            </div>
+          </div>
           <div>
-            <p>{Path.basename(@current_user.avatar)}</p>
+            <span>{Path.basename(@current_user.avatar)}</span>
             <button
+              class="btn"
               type="button"
               phx-value-filename={Path.basename(@current_user.avatar)}
               phx-click="remove_avatar"
             >
-              X
+              <.icon name="hero-x-mark-solid" class="h-4 w-4" />
             </button>
           </div>
         <% else %>
-          <p>No avatar uploaded</p>
-          <.live_file_input upload={@uploads.avatar} />
-          <button type="submit">Upload</button>
+          <fieldset class="fieldset">
+            <legend class="fieldset-legend">Pick a avatar file</legend>
+            <div>
+              <.live_file_input class="file-input" upload={@uploads.avatar} />
+              <button class="btn" type="submit">Upload</button>
+            </div>
+            <label class="label">Max size 2MB</label>
+          </fieldset>
         <% end %>
       </form>
       <div>
