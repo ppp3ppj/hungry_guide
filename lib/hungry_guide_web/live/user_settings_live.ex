@@ -222,9 +222,14 @@ defmodule HungryGuideWeb.UserSettingsLive do
     # Ensure destination folder exists
     File.mkdir_p!(Path.dirname(dest))
 
-    File.cp!(path, dest)
+    # using File.cp! my crash the server on I/O error; consider handling failures gracefully
+    case File.cp(path, dest) do
+      :ok -> {:ok, file_url(file_name)}
+      {:error, reason} -> {:error, reason}
+    end
 
-    {:ok, file_url(file_name)}
+    # File.cp!(path, dest)
+    # {:ok, file_url(file_name)}
   end
 
   defp remove_upload(_socket, _item, removed_entries) do
