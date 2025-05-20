@@ -1,2 +1,146 @@
 <.flash_group flash={@flash} />
-<h2>Hi</h2>
+<section class="relative h-[500px] overflow-hidden">
+  <div
+    class="hero absolute w-ful h-full "
+    style="background-image: url(https://images.unsplash.com/photo-1495521821757-a1efb6729352?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2846&q=80);"
+  >
+    <div class="hero-overlay"></div>
+    <div class="hero-content text-neutral-content text-center">
+      <div class="max-w-md">
+        <h1 class="mb-5 text-5xl font-bold">Discover Delicious Receips</h1>
+        <p class="mb-5">
+          Explore our collection of mouth-watering recipes from around the world, created for food lovers by food lovers
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 items-center justify-center">
+          <button class="btn btn-lg btn-primary">Browse Receips</button>
+          <button class="btn btn-lg btn-primary">Learn More</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="py-16">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-serif font-semibold mb-4">Latest Culinary News</h2>
+      <p class="text-gray-600 max-w-2xl mx-auto">
+        Stay up to date with our newest recipes, cooking techniques, and food trends from around the world.
+      </p>
+    </div>
+  </div>
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div class="card bg-base-100 w-96 shadow-sm">
+      <figure>
+        <img
+          src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
+          alt="Shoes"
+        />
+      </figure>
+      <div class="card-body">
+        <span class="badge badge-xs badge-warning">Category</span>
+        <h2 class="card-title font-medium text-xl mb-3">Card Title</h2>
+        <p class="text-gray-600 mb-4">
+          A card component has a figure, a body part, and inside body there are title and actions parts
+        </p>
+        <div class="flex justify-between items-center">
+          <span class="text-sm text-gray-500">
+            recipe.cookTime • recipe.difficulty
+          </span>
+          <button class="btn btn-primary hover:underline font-medium">Read More</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="py-16">
+  <div class="container mx-auto">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-serif font-semibold mb-4">Our Collection of Recipes</h2>
+      <p class="text-gray-600 max-w-2xl mx-auto">
+        Browse through our extensive collection of delicious recipes for every occasion, skill level, and taste preference.
+      </p>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-4">
+      <!-- RecipeCard 8 card -->
+    </div>
+
+<!-- Show more visible  -->
+    <div class="text-center mt-12">
+      <button class="btn btn-outline">Show More Recipes</button>
+    </div>
+  </div>
+</section>
+
+<section class="py-20 bg-green-400 text-white">
+  <div class="container mx-auto px-4">
+    <div class="max-w-3xl mx-auto text-center">
+      <h2 class="text-3xl font-serif font-semibold mb-4">
+        Subscribe to Our Tasty Newsletter
+      </h2>
+
+      <p class="text-white/90 mb-8">
+        Get our latest recipes, cooking tips, and exclusive offers delivered straight to your inbox.
+        Join thousands of food enthusiasts!
+      </p>
+
+      <form class="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">
+        <input type="email" placeholder="Your email address" class="input font-medium" />
+        <button type="submit" class="btn font-medium">
+          Subscribe
+        </button>
+      </form>
+
+      <p class="text-white/70 text-sm mt-4">
+        We respect your privacy. Unsubscribe at any time.
+      </p>
+    </div>
+  </div>
+</section>
+
+<footer class="bg-red-300 text-white pt-12 pb-8">
+  <div class="container mx-auto px-4">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+      <div>
+        <h3 class="font-serif text-xl mb-4">Culinary Delights</h3>
+        <p class="text-gray-300 text-sm">
+          Bringing the joy of cooking to your kitchen with delicious recipes from around the world.
+        </p>
+      </div>
+
+      <div>
+        <h4 class="font-medium text-lg mb-4">Quick Links</h4>
+        <ul class="space-y-2">
+          <li>Home</li>
+          <li>Recipes</li>
+          <li>Categories</li>
+          <li>About Us</li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="font-medium text-lg mb-4">Categories</h4>
+        <ul class="space-y-2">
+          <li>Desserts</li>
+          <li>Breakfast</li>
+          <li>Main Dishes</li>
+          <li>Vegetarian</li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="font-medium text-lg mb-4">Contact</h4>
+        <ul class="space-y-2">
+          <li class="text-gray-300 text-sm">contact@culinarydelights.com</li>
+          <li class="text-gray-300 text-sm">123 Cooking Street</li>
+          <li class="text-gray-300 text-sm">Foodville, FC 12345</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="border-t border-gray-700 pt-6 text-center text-gray-400 text-sm">
+      <p>© new Date.getFullYear Culinary Delights. All Rights Reserved.</p>
+    </div>
+  </div>
+</footer>
