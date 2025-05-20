@@ -67,15 +67,22 @@
       <!-- RecipeCard 8 card -->
 
       <div class="card bg-base-100 w-96 shadow-sm">
-        <figure>
-          <img
-            src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
-            alt="Shoes"
-          />
-        </figure>
+        <div class="relative">
+          <figure>
+            <img
+              src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
+              alt="Shoes"
+            />
+          </figure>
+          <div class="absolute top-3 right-3 bg-white px-2 py-1 rounded-full text-xs font-medium text-recipe-dark">
+            recipe.cookTime
+          </div>
+        </div>
         <div class="p-4">
           <div class="flex justify-between items-center items-start mb-2">
-            <span class="inline-block bg-recipe-secondary px-2 py-1 rounded text-xs font-medium bg-red-300">Category</span>
+            <span class="inline-block bg-recipe-secondary px-2 py-1 rounded text-xs font-medium bg-red-300">
+              Category
+            </span>
             <span class="text-xs">Difficulty</span>
           </div>
 
