@@ -12,7 +12,7 @@ defmodule HungryGuide.Inventories.Ingredient do
     belongs_to :unit, Inventories.Unit
 
     has_many :recipe_ingredients, Recipes.RecipeIngredient
-    has_many :ingredient, through: [:recipe_ingredients, :receipt]
+    has_many :ingredient, through: [:recipe_ingredients, :recipe]
 
     timestamps(type: :utc_datetime)
   end
