@@ -3,12 +3,12 @@ defmodule HungryGuideWeb.ReceiptLive.Index do
 
   alias HungryGuide.Inventories
   alias HungryGuide.Recipes
-  alias HungryGuide.Recipes.Receipt
+  alias HungryGuide.Recipes.Recipe
 
   @impl true
   def mount(_params, _session, socket) do
     receipts =
-      Recipes.list_receipts(
+      Recipes.list_recipes(
         user: socket.assigns.current_user,
         preload: :creator
       )
@@ -30,11 +30,11 @@ defmodule HungryGuideWeb.ReceiptLive.Index do
 
   defp apply_action(socket, :edit, %{"id" => id}) when is_uuid(id) do
     # Fetch receipt_ingredients and the receipt
-    receipt_ingredients = HungryGuide.Recipes.get_receipt_ingredients(id)
+    receipt_ingredients = HungryGuide.Recipes.get_recipe_ingredients(id)
     ingredients = Inventories.list_ingredients()
     # receipt = Recipes.get_receipt!(id)
     receipt =
-      Recipes.get_receipt(id,
+      Recipes.get_recipe(id,
         user: socket.assigns.current_user,
         preload: :creator
       )
@@ -69,7 +69,7 @@ defmodule HungryGuideWeb.ReceiptLive.Index do
 
     socket
     |> assign(:page_title, "New Receipt")
-    |> assign(:receipt, %Receipt{})
+    |> assign(:receipt, %Recipe{})
     |> assign(:ingredients, ingredients)
     |> assign(:quantities, initial_quantities)
   end
@@ -87,8 +87,8 @@ defmodule HungryGuideWeb.ReceiptLive.Index do
 
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
-    receipt = Recipes.get_receipt!(id)
-    {:ok, _} = Recipes.delete_receipt(receipt)
+    receipt = Recipes.get_recipe!(id)
+    {:ok, _} = Recipes.delete_recipe(receipt)
 
     {:noreply, stream_delete(socket, :receipts, receipt)}
   end

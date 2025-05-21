@@ -11,8 +11,8 @@ defmodule HungryGuideWeb.ReceiptLive.Show do
 
   @impl true
   def handle_params(%{"id" => id}, _, socket) do
-    receipt = Recipes.get_receipt!(id)
-    receipt_ingredients = Recipes.get_receipt_ingredients(id)
+    receipt = Recipes.get_recipe!(id)
+    receipt_ingredients = Recipes.get_recipe_ingredients(id)
     ingredients = Inventories.list_ingredients()
     IO.inspect(receipt_ingredients)
 

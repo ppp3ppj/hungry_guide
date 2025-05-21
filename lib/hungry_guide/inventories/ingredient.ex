@@ -11,8 +11,8 @@ defmodule HungryGuide.Inventories.Ingredient do
     #field :unit_id, :binary_id
     belongs_to :unit, Inventories.Unit
 
-    has_many :receipt_ingredients, Recipes.ReceiptIngredient
-    has_many :ingredient, through: [:receipt_ingredients, :receipt]
+    has_many :recipe_ingredients, Recipes.RecipeIngredient
+    has_many :ingredient, through: [:recipe_ingredients, :receipt]
 
     timestamps(type: :utc_datetime)
   end
