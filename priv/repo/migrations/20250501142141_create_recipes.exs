@@ -1,8 +1,8 @@
-defmodule HungryGuide.Repo.Migrations.CreateReceipts do
+defmodule HungryGuide.Repo.Migrations.CreateRecipes do
   use Ecto.Migration
 
   def change do
-    create table(:receipts, primary_key: false) do
+    create table(:recipes, primary_key: false) do
       add :id, :binary_id, primary_key: true
       add :name, :string
       add :description, :string

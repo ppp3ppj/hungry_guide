@@ -1,11 +1,11 @@
-defmodule HungryGuide.Repo.Migrations.AddCreatorIdToReceipts do
+defmodule HungryGuide.Repo.Migrations.AddCreatorIdToRecipes do
   use Ecto.Migration
 
   def change do
-    alter table(:receipts) do
+    alter table(:recipes) do
       add :creator_id, references(:users, type: :binary_id, on_delete: :nothing)
     end
 
-    create index(:receipts, [:creator_id])
+    create index(:recipes, [:creator_id])
   end
 end
