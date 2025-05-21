@@ -51,17 +51,17 @@ defmodule HungryGuideWeb.ReceiptLive.FormComponent do
      socket
      |> assign(assigns)
      |> assign_new(:form, fn ->
-       to_form(Recipes.change_receipt(receipt))
+       to_form(Recipes.change_recipe(receipt))
      end)}
   end
 
   @impl true
-  def handle_event("validate", %{"receipt" => receipt_params}, socket) do
-    changeset = Recipes.change_receipt(socket.assigns.receipt, receipt_params)
+  def handle_event("validate", %{"recipe" => receipt_params}, socket) do
+    changeset = Recipes.change_recipe(socket.assigns.receipt, receipt_params)
     {:noreply, assign(socket, form: to_form(changeset, action: :validate))}
   end
 
-  def handle_event("save", %{"receipt" => receipt_params}, socket) do
+  def handle_event("save", %{"recipe" => receipt_params}, socket) do
     save_receipt(socket, socket.assigns.action, receipt_params)
   end
 
@@ -70,7 +70,7 @@ defmodule HungryGuideWeb.ReceiptLive.FormComponent do
     receipt = socket.assigns.receipt
     params = Map.merge(receipt_params, %{"receipt_ingredients" => ingredient_quantities})
 
-    case Recipes.update_receipt_with_ingredients(params, receipt) do
+    case Recipes.update_recipe_with_ingredients(params, receipt) do
       {:ok, receipt} ->
         notify_parent({:saved, receipt})
 
@@ -89,7 +89,7 @@ defmodule HungryGuideWeb.ReceiptLive.FormComponent do
     receipt_params = Map.put(receipt_params, "creator_id", socket.assigns.current_user.id)
     params = Map.merge(receipt_params, %{"receipt_ingredients" => ingredient_quantities})
 
-    case Recipes.create_receipt_with_ingredients(params) do
+    case Recipes.create_recipe_with_ingredients(params) do
       {:ok, receipt} ->
         notify_parent({:saved, receipt})
 

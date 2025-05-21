@@ -4,32 +4,32 @@ defmodule HungryGuide.Recipes do
   """
 
   import Ecto.Query, warn: false
-  alias HungryGuide.Recipes.ReceiptIngredient
+  alias HungryGuide.Recipes.RecipeIngredient
   alias HungryGuide.Repo
 
-  alias HungryGuide.Recipes.Receipt
+  alias HungryGuide.Recipes.Recipe
 
   @doc """
   Returns the list of receipts.
 
   ## Examples
 
-      iex> list_receipts()
-      [%Receipt{}, ...]
+      iex> list_recipes()
+      [%Recipe{}, ...]
 
   """
-  def list_receipts do
-    Repo.all(Receipt)
+  #def list_recipes do
+  #  Repo.all(Recipe)
+  #end
+
+  def list_recipes, do: list_recipes([])
+
+  def list_recipes(criteria) when is_list(criteria) do
+    Repo.all(recipe_query(criteria))
   end
 
-  def list_receipts, do: list_receipts([])
-
-  def list_receipts(criteria) when is_list(criteria) do
-    Repo.all(receipt_query(criteria))
-  end
-
-  defp receipt_query(criteria) do
-    query = from(b in Receipt)
+  defp recipe_query(criteria) do
+    query = from(b in Recipe)
 
     Enum.reduce(criteria, query, fn
       {:user, user}, query ->
@@ -44,106 +44,106 @@ defmodule HungryGuide.Recipes do
   end
 
   @doc """
-  Gets a single receipt.
+  Gets a single recipe.
 
-  Raises `Ecto.NoResultsError` if the Receipt does not exist.
+  Raises `Ecto.NoResultsError` if the Recipe does not exist.
 
   ## Examples
 
-      iex> get_receipt!(123)
-      %Receipt{}
+      iex> get_recipe!(123)
+      %Recipe{}
 
-      iex> get_receipt!(456)
+      iex> get_recipe!(456)
       ** (Ecto.NoResultsError)
 
   """
-  def get_receipt!(id), do: Repo.get!(Receipt, id)
+  def get_recipe!(id), do: Repo.get!(Recipe, id)
 
-  def get_receipt(id, criteria \\ %{}) do
-    Repo.get(receipt_query(criteria), id)
+  def get_recipe(id, criteria \\ %{}) do
+    Repo.get(recipe_query(criteria), id)
   end
 
   @doc """
-  Creates a receipt.
+  Creates a recipe.
 
   ## Examples
 
-      iex> create_receipt(%{field: value})
-      {:ok, %Receipt{}}
+      iex> create_recipe(%{field: value})
+      {:ok, %Recipe{}}
 
-      iex> create_receipt(%{field: bad_value})
+      iex> create_recipe(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_receipt(attrs \\ %{}) do
-    %Receipt{}
-    |> Receipt.changeset(attrs)
+  def create_recipe(attrs \\ %{}) do
+    %Recipe{}
+    |> Recipe.changeset(attrs)
     |> Repo.insert()
   end
 
   @doc """
-  Updates a receipt.
+  Updates a recipe.
 
   ## Examples
 
-      iex> update_receipt(receipt, %{field: new_value})
-      {:ok, %Receipt{}}
+      iex> update_recipe(recipe, %{field: new_value})
+      {:ok, %Recipe{}}
 
-      iex> update_receipt(receipt, %{field: bad_value})
+      iex> update_recipe(recipe, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_receipt(%Receipt{} = receipt, attrs) do
-    receipt
-    |> Receipt.changeset(attrs)
+  def update_recipe(%Recipe{} = recipe, attrs) do
+    recipe
+    |> Recipe.changeset(attrs)
     |> Repo.update()
   end
 
   @doc """
-  Deletes a receipt.
+  Deletes a recipe.
 
   ## Examples
 
-      iex> delete_receipt(receipt)
-      {:ok, %Receipt{}}
+      iex> delete_recipe(recipe)
+      {:ok, %Recipe{}}
 
-      iex> delete_receipt(receipt)
+      iex> delete_recipe(recipe)
       {:error, %Ecto.Changeset{}}
 
   """
-  def delete_receipt(%Receipt{} = receipt) do
-    Repo.delete(receipt)
+  def delete_recipe(%Recipe{} = recipe) do
+    Repo.delete(recipe)
   end
 
   @doc """
-  Returns an `%Ecto.Changeset{}` for tracking receipt changes.
+  Returns an `%Ecto.Changeset{}` for tracking recipe changes.
 
   ## Examples
 
-      iex> change_receipt(receipt)
-      %Ecto.Changeset{data: %Receipt{}}
+      iex> change_recipe(recipe)
+      %Ecto.Changeset{data: %Recipe{}}
 
   """
-  def change_receipt(%Receipt{} = receipt, attrs \\ %{}) do
-    Receipt.changeset(receipt, attrs)
+  def change_recipe(%Recipe{} = recipe, attrs \\ %{}) do
+    Recipe.changeset(recipe, attrs)
   end
 
-  def create_receipt_with_ingredients(attrs) do
+  def create_recipe_with_ingredients(attrs) do
     # Extract name and description attributes
     receipt_attrs = Map.take(attrs, ["name", "description", "creator_id"])
     ingredients_map = Map.drop(attrs, ["name", "description", "creator_id"])
     # Convert ingredient data into ReceiptIngredient structs
 
     receipt_ingredients =
-      build_receipt_ingredients(Map.get(ingredients_map, "receipt_ingredients", %{}))
+      build_recipe_ingredients(Map.get(ingredients_map, "receipt_ingredients", %{}))
 
-    %Receipt{}
-    |> Receipt.changeset(receipt_attrs)
-    |> Ecto.Changeset.put_assoc(:receipt_ingredients, receipt_ingredients)
+    %Recipe{}
+    |> Recipe.changeset(receipt_attrs)
+    |> Ecto.Changeset.put_assoc(:recipe_ingredients, receipt_ingredients)
     |> Repo.insert()
   end
 
-  defp build_receipt_ingredients(ingredients_map) do
+  defp build_recipe_ingredients(ingredients_map) do
     # Convert each ingredient ID and quantity into a ReceiptIngredient struct
     ingredients_map
     |> Enum.filter(fn {_id, qty} ->
@@ -151,7 +151,7 @@ defmodule HungryGuide.Recipes do
       Decimal.compare(decimal_qty, Decimal.new(0)) == :gt
     end)
     |> Enum.map(fn {ingredient_id, quantity} ->
-      %ReceiptIngredient{
+      %RecipeIngredient{
         ingredient_id: ingredient_id,
         # assuming quantity is a string, convert to Decimal
         # quantity: to_decimal(quantity)
@@ -160,28 +160,28 @@ defmodule HungryGuide.Recipes do
     end)
   end
 
-  def get_receipt_ingredients(receipt_id) do
+  def get_recipe_ingredients(recipe_id) do
     Repo.all(
-      from ri in ReceiptIngredient,
-        where: ri.receipt_id == ^receipt_id,
+      from ri in RecipeIngredient,
+        where: ri.recipe_id == ^recipe_id,
         # Optionally preload the ingredient data
         preload: [:ingredient]
     )
   end
 
-  def update_receipt_with_ingredients(attrs, receipt) do
-    receipt = Repo.get!(Receipt, receipt.id) |> Repo.preload(:receipt_ingredients)
+  def update_recipe_with_ingredients(attrs, recipe) do
+    recipe = Repo.get!(Recipe, recipe.id) |> Repo.preload(:recipe_ingredients)
     # Extract name and description attributes
     receipt_attrs = Map.take(attrs, ["name", "description", "id", "creator_id"])
     ingredients_map = Map.drop(attrs, ["name", "description", "creator_id"])
 
     # Convert ingredient data into ReceiptIngredient structs
     receipt_ingredients =
-      build_receipt_ingredients(Map.get(ingredients_map, "receipt_ingredients", %{}))
+      build_recipe_ingredients(Map.get(ingredients_map, "receipt_ingredients", %{}))
 
-    receipt
-    |> Receipt.changeset(receipt_attrs)
-    |> Ecto.Changeset.put_assoc(:receipt_ingredients, receipt_ingredients)
+    recipe
+    |> Recipe.changeset(receipt_attrs)
+    |> Ecto.Changeset.put_assoc(:recipe_ingredients, receipt_ingredients)
     |> Repo.update()
   end
 end
