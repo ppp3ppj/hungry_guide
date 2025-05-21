@@ -8,7 +8,7 @@ defmodule HungryGuide.Recipes.RecipeIngredient do
   schema "recipe_ingredients" do
     field :quantity, :decimal
 
-    belongs_to :recipe, Recipes.Receipt
+    belongs_to :recipe, HungryGuide.Recipes.Recipe
     belongs_to :ingredient, Inventories.Ingredient
 
     timestamps(type: :utc_datetime)
