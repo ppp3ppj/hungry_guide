@@ -1,7 +1,8 @@
 version: '3.5'
 services:
   postgresserver:
-    image: postgres:alpine
+    image: docker.io/library/postgres:alpine # podman
+    #image: postgres:alpine # for docker
     container_name: hungry_guide_db
     hostname: postgres-server
     restart: always
