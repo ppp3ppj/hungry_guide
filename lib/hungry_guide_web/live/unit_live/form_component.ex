@@ -20,6 +20,7 @@ defmodule HungryGuideWeb.UnitLive.FormComponent do
         phx-submit="save"
       >
         <.input field={@form[:name]} type="text" label="Name" />
+        <.input field={@form[:abbreviation]} type="text" label="Abbreviation" />
         <:actions>
           <.button phx-disable-with="Saving...">Save Unit</.button>
         </:actions>

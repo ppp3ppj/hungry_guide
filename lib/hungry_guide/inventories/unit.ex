@@ -6,6 +6,7 @@ defmodule HungryGuide.Inventories.Unit do
   @foreign_key_type :binary_id
   schema "units" do
     field :name, :string
+    field :abbreviation, :string
 
     timestamps(type: :utc_datetime)
   end
@@ -13,7 +14,7 @@ defmodule HungryGuide.Inventories.Unit do
   @doc false
   def changeset(unit, attrs) do
     unit
-    |> cast(attrs, [:name])
-    |> validate_required([:name])
+    |> cast(attrs, [:name, :abbreviation])
+    |> validate_required([:name, :abbreviation])
   end
 end
