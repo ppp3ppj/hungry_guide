@@ -9,9 +9,13 @@ defmodule HungryGuideWeb.IngredientLive.Index do
     units = Inventories.list_units()
       |> Enum.map(&{&1.name, &1.id})
 
+    categories = HungryGuide.Catalog.list_categories_by_type(:ingredient)
+      |> Enum.map(&{&1.name, &1.id})
+
     socket =
       socket
       |> assign(:units, units)
+      |> assign(:categories, categories)
       |> stream(:ingredients, Inventories.list_ingredients())
 
     {:ok, socket}
