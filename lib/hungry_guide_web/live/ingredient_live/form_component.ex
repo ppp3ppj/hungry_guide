@@ -67,7 +67,6 @@ defmodule HungryGuideWeb.IngredientLive.FormComponent do
   end
 
   defp save_ingredient(socket, :new, ingredient_params) do
-    IO.inspect(ingredient_params, label: "pppgg")
     case Inventories.create_ingredient(ingredient_params) do
       {:ok, ingredient} ->
         notify_parent({:saved, ingredient})

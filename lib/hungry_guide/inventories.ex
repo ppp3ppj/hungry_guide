@@ -135,6 +135,7 @@ defmodule HungryGuide.Inventories do
   def get_ingredient!(id) do
     Repo.get!(Ingredient, id)
     |> Repo.preload(:unit)
+    |> Repo.preload(:category)
   end
 
   @doc """

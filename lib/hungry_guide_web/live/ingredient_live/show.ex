@@ -15,10 +15,14 @@ defmodule HungryGuideWeb.IngredientLive.Show do
     units = Inventories.list_units()
       |> Enum.map(&{&1.name, &1.id})
 
+    categories = HungryGuide.Catalog.list_categories_by_type(:ingredient)
+      |> Enum.map(&{&1.name, &1.id})
+
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
      |> assign(:ingredient, ingredient)
+     |> assign(:categories, categories)
      |> assign(:units, units)}
   end
 
