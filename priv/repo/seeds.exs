@@ -10,6 +10,7 @@
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
 
+alias HungryGuide.Inventories.Unit
 alias HungryGuide.Catalog.Category
 alias HungryGuide.Accounts
 alias HungryGuide.Repo
@@ -71,3 +72,22 @@ Enum.each(ingredient_categories ++ recipe_categories, fn attrs ->
   |> Repo.insert!()
 end)
 
+
+units = [
+  %{name: "gram", abbreviation: "g"},
+  %{name: "kilogram", abbreviation: "kg"},
+  %{name: "milliliter", abbreviation: "ml"},
+  %{name: "liter", abbreviation: "l"},
+  %{name: "piece", abbreviation: "pc"},
+  %{name: "package", abbreviation: "pkg"},
+  %{name: "tablespoon", abbreviation: "tbsp"},
+  %{name: "teaspoon", abbreviation: "tsp"},
+  %{name: "cup", abbreviation: "cup"},
+  %{name: "ounce", abbreviation: "oz"}
+]
+
+Enum.each(units, fn attrs ->
+  %Unit{}
+  |> Unit.changeset(attrs)
+  |> Repo.insert!()
+end)
