@@ -101,4 +101,9 @@ defmodule HungryGuide.Catalog do
   def change_category(%Category{} = category, attrs \\ %{}) do
     Category.changeset(category, attrs)
   end
+
+  def list_categories_by_type(type) when type in [:ingredient, :recipe] do
+    from(c in Category, where: c.type == ^type)
+    |> Repo.all()
+  end
 end
