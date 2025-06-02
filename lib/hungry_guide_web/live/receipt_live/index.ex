@@ -13,9 +13,13 @@ defmodule HungryGuideWeb.ReceiptLive.Index do
         preload: :creator
       )
 
+    categories = HungryGuide.Catalog.list_categories_by_type(:recipe)
+      |> Enum.map(&{&1.name, &1.id})
+
     socket =
       socket
       |> stream(:receipts, receipts)
+      |> assign(:categories, categories)
 
     # |> stream(:receipts, Recipes.list_receipts())
 
@@ -36,7 +40,7 @@ defmodule HungryGuideWeb.ReceiptLive.Index do
     receipt =
       Recipes.get_recipe(id,
         user: socket.assigns.current_user,
-        preload: :creator
+        preload: [:creator, :category]
       )
 
     if receipt do

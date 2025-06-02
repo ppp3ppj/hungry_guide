@@ -21,6 +21,7 @@ defmodule HungryGuideWeb.IngredientLive.FormComponent do
       >
         <.input field={@form[:name]} type="text" label="Name" />
         <.input field={@form[:unit_id]} type="select" options={@units} label="Unit" />
+        <.input field={@form[:category_id]} type="select" options={@categories} label="Category" />
 
         <:actions>
           <.button phx-disable-with="Saving...">Save Ingredient</.button>

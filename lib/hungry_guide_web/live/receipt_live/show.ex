@@ -11,10 +11,14 @@ defmodule HungryGuideWeb.ReceiptLive.Show do
 
   @impl true
   def handle_params(%{"id" => id}, _, socket) do
-    receipt = Recipes.get_recipe!(id)
+    receipt = Recipes.get_recipe(id, preload: [:category])
     receipt_ingredients = Recipes.get_recipe_ingredients(id)
     ingredients = Inventories.list_ingredients()
     IO.inspect(receipt_ingredients)
+
+    categories =
+      HungryGuide.Catalog.list_categories_by_type(:recipe)
+      |> Enum.map(&{&1.name, &1.id})
 
     initial_quantities = Map.new(ingredients, fn ingr -> {ingr.id, 0} end)
 
@@ -30,6 +34,7 @@ defmodule HungryGuideWeb.ReceiptLive.Show do
      |> assign(:receipt, receipt)
      |> assign(:ingredients, ingredients)
      |> assign(:quantities, quantities)
+     |> assign(:categories, categories)
      |> assign(:receipt_ingredients, receipt_ingredients)}
   end
 

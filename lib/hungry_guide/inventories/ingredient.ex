@@ -11,6 +11,8 @@ defmodule HungryGuide.Inventories.Ingredient do
     #field :unit_id, :binary_id
     belongs_to :unit, Inventories.Unit
 
+    belongs_to :category, HungryGuide.Catalog.Category, type: :binary_id
+
     has_many :recipe_ingredients, Recipes.RecipeIngredient
     has_many :ingredient, through: [:recipe_ingredients, :recipe]
 
@@ -20,7 +22,7 @@ defmodule HungryGuide.Inventories.Ingredient do
   @doc false
   def changeset(ingredient, attrs) do
     ingredient
-    |> cast(attrs, [:name, :unit_id])
-    |> validate_required([:name, :unit_id])
+    |> cast(attrs, [:name, :unit_id, :category_id])
+    |> validate_required([:name, :unit_id, :category_id])
   end
 end

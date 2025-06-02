@@ -10,7 +10,11 @@
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
 
+alias HungryGuide.Inventories.Unit
+alias HungryGuide.Catalog.Category
 alias HungryGuide.Accounts
+alias HungryGuide.Repo
+
 admin_email = "admin@admin.com"
 password = "supersecret123"
 admin_name = "admin"
@@ -45,3 +49,45 @@ case Accounts.get_user_by_email(user_email) do
   _user ->
     IO.puts("User already exists: #{user_email}")
 end
+
+
+# Ingredient categories
+ingredient_categories = [
+  %{name: "Vegetables", type: :ingredient},
+  %{name: "Meats", type: :ingredient},
+  %{name: "Spices", type: :ingredient}
+]
+
+# Recipe categories
+recipe_categories = [
+  %{name: "Main Course", type: :recipe},
+  %{name: "Appetizers", type: :recipe},
+  %{name: "Desserts", type: :recipe}
+]
+
+# Insert all categories
+Enum.each(ingredient_categories ++ recipe_categories, fn attrs ->
+  %Category{}
+  |> Category.changeset(attrs)
+  |> Repo.insert!()
+end)
+
+
+units = [
+  %{name: "gram", abbreviation: "g"},
+  %{name: "kilogram", abbreviation: "kg"},
+  %{name: "milliliter", abbreviation: "ml"},
+  %{name: "liter", abbreviation: "l"},
+  %{name: "piece", abbreviation: "pc"},
+  %{name: "package", abbreviation: "pkg"},
+  %{name: "tablespoon", abbreviation: "tbsp"},
+  %{name: "teaspoon", abbreviation: "tsp"},
+  %{name: "cup", abbreviation: "cup"},
+  %{name: "ounce", abbreviation: "oz"}
+]
+
+Enum.each(units, fn attrs ->
+  %Unit{}
+  |> Unit.changeset(attrs)
+  |> Repo.insert!()
+end)

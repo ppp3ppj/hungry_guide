@@ -11,6 +11,9 @@
 <.list>
   <:item title="Name">{@receipt.name}</:item>
   <:item title="Description">{@receipt.description}</:item>
+  <:item title="Category">
+    {(@receipt.category && @receipt.category.name) || "No category"}
+  </:item>
 </.list>
 
 <h3>Ingredients</h3>
@@ -37,6 +40,7 @@
     receipt={@receipt}
     ingredients={@ingredients}
     quantities={@quantities}
+    categories={@categories}
     patch={~p"/receipts/#{@receipt}"}
   />
 </.modal>

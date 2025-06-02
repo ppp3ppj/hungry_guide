@@ -18,9 +18,10 @@ defmodule HungryGuide.Recipes do
       [%Recipe{}, ...]
 
   """
-  #def list_recipes do
+
+  # def list_recipes do
   #  Repo.all(Recipe)
-  #end
+  # end
 
   def list_recipes, do: list_recipes([])
 
@@ -34,6 +35,9 @@ defmodule HungryGuide.Recipes do
     Enum.reduce(criteria, query, fn
       {:user, user}, query ->
         from b in query, where: b.creator_id == ^user.id
+
+      {:category, category_id}, query ->
+        from b in query, where: b.category_id == ^category_id
 
       {:preload, bindings}, query ->
         preload(query, ^bindings)
@@ -130,7 +134,9 @@ defmodule HungryGuide.Recipes do
 
   def create_recipe_with_ingredients(attrs) do
     # Extract name and description attributes
-    receipt_attrs = Map.take(attrs, ["name", "description", "creator_id"])
+    receipt_attrs =
+      Map.take(attrs, ["name", "description", "creator_id", "category_id"])
+
     ingredients_map = Map.drop(attrs, ["name", "description", "creator_id"])
     # Convert ingredient data into ReceiptIngredient structs
 
@@ -172,7 +178,7 @@ defmodule HungryGuide.Recipes do
   def update_recipe_with_ingredients(attrs, recipe) do
     recipe = Repo.get!(Recipe, recipe.id) |> Repo.preload(:recipe_ingredients)
     # Extract name and description attributes
-    receipt_attrs = Map.take(attrs, ["name", "description", "id", "creator_id"])
+    receipt_attrs = Map.take(attrs, ["name", "description", "id", "creator_id", "category_id"])
     ingredients_map = Map.drop(attrs, ["name", "description", "creator_id"])
 
     # Convert ingredient data into ReceiptIngredient structs
