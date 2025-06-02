@@ -12,11 +12,7 @@
   <:item title="Name">{@receipt.name}</:item>
   <:item title="Description">{@receipt.description}</:item>
   <:item title="Category">
-    <%= if @receipt.category do %>
-      {@receipt.category.name}
-    <% else %>
-      No category
-    <% end %>
+    {(@receipt.category && @receipt.category.name) || "No category"}
   </:item>
 </.list>
 
