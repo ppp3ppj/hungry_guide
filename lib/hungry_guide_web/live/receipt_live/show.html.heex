@@ -11,7 +11,13 @@
 <.list>
   <:item title="Name">{@receipt.name}</:item>
   <:item title="Description">{@receipt.description}</:item>
-  <:item title="Category">{@receipt.category.name}</:item>
+  <:item title="Category">
+    <%= if @receipt.category do %>
+      {@receipt.category.name}
+    <% else %>
+      No category
+    <% end %>
+  </:item>
 </.list>
 
 <h3>Ingredients</h3>
