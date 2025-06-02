@@ -21,6 +21,7 @@ defmodule HungryGuideWeb.ReceiptLive.FormComponent do
       >
         <.input field={@form[:name]} type="text" label="Name" />
         <.input field={@form[:description]} type="text" label="Description" />
+        <.input field={@form[:category_id]} type="select" options={@categories} label="Category" />
 
         <div class="grid grid-cols-3 gap-4">
           <%= for ingr <- @ingredients do %>

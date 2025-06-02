@@ -17,14 +17,16 @@ defmodule HungryGuide.Recipes.Recipe do
 
     belongs_to :creator, HungryGuide.Accounts.User
 
+    belongs_to :category, HungryGuide.Catalog.Category, type: :binary_id
+
     timestamps(type: :utc_datetime)
   end
 
   @doc false
   def changeset(recipe, attrs) do
     recipe
-    |> cast(attrs, [:name, :description, :creator_id])
-    |> validate_required([:name, :description, :creator_id])
+    |> cast(attrs, [:name, :description, :creator_id, :category_id])
+    |> validate_required([:name, :description, :creator_id]) # can make optional :category_id
     |> cast_assoc(:recipe_ingredients)
   end
 end
