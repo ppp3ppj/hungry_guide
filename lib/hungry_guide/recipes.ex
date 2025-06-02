@@ -136,7 +136,6 @@ defmodule HungryGuide.Recipes do
     # Extract name and description attributes
     receipt_attrs =
       Map.take(attrs, ["name", "description", "creator_id", "category_id"])
-      |> IO.inspect(label: "Now ppp:")
 
     ingredients_map = Map.drop(attrs, ["name", "description", "creator_id"])
     # Convert ingredient data into ReceiptIngredient structs

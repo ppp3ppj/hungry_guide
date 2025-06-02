@@ -43,7 +43,6 @@ defmodule HungryGuideWeb.ReceiptLive.Index do
         preload: [:creator, :category]
       )
 
-    IO.inspect(receipt, label: "AAaaa::")
     if receipt do
       # Start with all ingredients set to 0
       initial_quantities = Map.new(ingredients, fn ingr -> {ingr.id, 0} end)
