@@ -22,7 +22,11 @@
     <div class="sr-only">
       <.link navigate={~p"/receipts/#{receipt}"}>Show</.link>
     </div>
+    <.link navigate={~p"/recipes/#{receipt}/edit"}>Edit(new)</.link>
+
+  <!--
     <.link patch={~p"/receipts/#{receipt}/edit"}>Edit</.link>
+-->
   </:action>
   <:action :let={{id, receipt}}>
     <.link

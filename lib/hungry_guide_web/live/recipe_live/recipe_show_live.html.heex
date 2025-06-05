@@ -1,1 +1,12 @@
-ppp
+<.live_component
+  module={HungryGuideWeb.ReceiptLive.FormComponent}
+  id={@receipt.id || :new}
+  title={@page_title}
+  action={@live_action}
+  receipt={@receipt}
+  quantities={@quantities}
+  ingredients={@ingredients}
+  categories={@categories}
+  current_user={@current_user}
+  patch={~p"/receipts"}
+/>

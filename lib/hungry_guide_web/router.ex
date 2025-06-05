@@ -97,6 +97,7 @@ defmodule HungryGuideWeb.Router do
 
       # Recipes
       live "/recipes/new", RecipeShowLive, :new
+      live "/recipes/:id/edit", RecipeShowLive, :edit
 
 
       # Category

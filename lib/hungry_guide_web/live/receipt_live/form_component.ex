@@ -79,12 +79,13 @@ defmodule HungryGuideWeb.ReceiptLive.FormComponent do
 
     case Recipes.update_recipe_with_ingredients(params, receipt) do
       {:ok, receipt} ->
-        notify_parent({:saved, receipt})
+        #notify_parent({:saved, receipt})
 
         {:noreply,
          socket
          |> put_flash(:info, "Receipt updated successfully")
-         |> push_patch(to: socket.assigns.patch)}
+          #|> push_patch(to: socket.assigns.patch)}
+         |> redirect(to: ~p"/receipts")}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, form: to_form(changeset))}
@@ -98,12 +99,13 @@ defmodule HungryGuideWeb.ReceiptLive.FormComponent do
 
     case Recipes.create_recipe_with_ingredients(params) do
       {:ok, receipt} ->
-        notify_parent({:saved, receipt})
+        #notify_parent({:saved, receipt})
 
         {:noreply,
          socket
          |> put_flash(:info, "Receipt created successfully")
-         |> push_patch(to: socket.assigns.patch)}
+         # |> push_patch(to: socket.assigns.patch)}
+         |> redirect(to: ~p"/receipts")}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, form: to_form(changeset))}
